@@ -123,3 +123,10 @@
   (run-hooks 'pyxl-mode-hook))
 
 (provide 'pyxl-mode)
+
+;; In python-mode.el RET is bound to newline-and-indent, which indents the next line if necessary.
+;; In python.el which we're extending, this is bound to C-j instead.
+;;  This binds RET to newline-and-indent
+(add-hook
+ 'python-mode-hook
+ '(lambda () (define-key python-mode-map "\C-m" 'newline-and-indent)))
