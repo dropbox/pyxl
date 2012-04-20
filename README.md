@@ -22,7 +22,7 @@ This meant no longer dealing with a separate "templating" language, and a lot mo
 
 ## Installation
 
-Download [pyxl-1.0.tar.gz](https://github.com/downloads/awable/cove/pyxl-1.0.tar.gz) and run the following commands from the directory you downloaded to.
+Download [pyxl-1.0.tar.gz](https://github.com/downloads/awable/pyxl/pyxl-1.0.tar.gz) and run the following commands from the directory you downloaded to.
 
     tar xvzf pyxl-1.0.tar.gz
     cd pyxl-1.0
@@ -43,7 +43,7 @@ Pyxl converts HTML tags into python objects before the file is run through the i
     from pyxl.html import *
     print x_head().append_children(x_body().append_children("Hello World!"))
 
-Pyxl's usefulness comes from being able to write HTML rather than unwieldy object instantiations and function calls. The `pyxl.html` module contains objects for all the basic HTML tags. The conversion is relatively straightforward: Opening tags are converted into object instantiations for the respective tag, nested tags are passed in as arguments to the `append_children` method, and closing tags close the bracket to the `append_children` call. As a result, a big advantage of this is that stack traces on errors map directly to what you've written. To learn more about how Pyxl does this, see the [Implementation Details](https://github.com/awable/cove/wiki/pyxl) section below.
+Pyxl's usefulness comes from being able to write HTML rather than unwieldy object instantiations and function calls. The `pyxl.html` module contains objects for all the basic HTML tags. The conversion is relatively straightforward: Opening tags are converted into object instantiations for the respective tag, nested tags are passed in as arguments to the `append_children` method, and closing tags close the bracket to the `append_children` call. As a result, a big advantage of this is that stack traces on errors map directly to what you've written. To learn more about how Pyxl does this, see the **Implementation Details** section below.
 
 ## Documentation
 
@@ -64,7 +64,7 @@ Anything wrapped with {}'s is evaluated as a python expression. Please note that
 
 ### Dynamic Elements
 
-Pyxl converts tags into python objects in the background, which inherit from a class called [`x_base`](https://github.com/awable/cove/blob/master/pyxl/pyxl/base.py). This means that tags have certain methods you can call on them. Here is an example snippet that uses the `append` function to dynamically create an unordered list.
+Pyxl converts tags into python objects in the background, which inherit from a class called [`x_base`](https://github.com/awable/pyxl/blob/master/pyxl/pyxl/base.py). This means that tags have certain methods you can call on them. Here is an example snippet that uses the `append` function to dynamically create an unordered list.
 
     items = ['Puppies', 'Dragons']
     nav = <ul />
@@ -107,7 +107,7 @@ The above script will print out:
 
 UI Modules are especially useful for creating re-usable building blocks in your application, making it quicker to implement new features, and keeping the UI consistent. Pyxl thinks of UI modules as user defined HTML tags, and so they are used just like you would use a `<div>` or any other tag.
 
-Creating UI modules in Pyxl simply means creating a class that inherits from [`x_element`](https://github.com/awable/cove/blob/master/pyxl/pyxl/element.py) and implements the `render()` method. Modules must be prefixed with `x_`. This is an arbitrary requirement, but is useful in separating out pyxl modules from other things. To demonstrate, a useful UI module is a content box, which is a box with a linked title and some arbitrary content:
+Creating UI modules in Pyxl simply means creating a class that inherits from [`x_element`](https://github.com/awable/pyxl/blob/master/pyxl/pyxl/element.py) and implements the `render()` method. Modules must be prefixed with `x_`. This is an arbitrary requirement, but is useful in separating out pyxl modules from other things. To demonstrate, a useful UI module is a content box, which is a box with a linked title and some arbitrary content:
 
     # coding: pyxl
     from pyxl.html import *
@@ -142,7 +142,7 @@ Some things to note about UI modules.
 
 ### Fragments
 
-The [`pyxl.html`](https://github.com/awable/cove/blob/master/pyxl/pyxl/html.py) module provides the `<frag>` tag, which allows one to group a set of HTML tags without a parent. Rendering the `<frag>` tag simply renders all the children, and doesn't add to the markup.
+The [`pyxl.html`](https://github.com/awable/pyxl/blob/master/pyxl/pyxl/html.py) module provides the `<frag>` tag, which allows one to group a set of HTML tags without a parent. Rendering the `<frag>` tag simply renders all the children, and doesn't add to the markup.
 
 ### Conditional HTML
 
@@ -154,15 +154,15 @@ Pyxl avoids support for logic within the HTML flow, except for one case where we
 
 Pyxl uses support for specifying source code encodings as described in [PEP 263](http://www.python.org/dev/peps/pep-0263/) to do what it does. The functionality was originally provided so that python developers could write code in non-ascii languages (eg. chinese variable names). Pyxl creates a custom encoding called pyxl which allows it to convert XML into regular python before the file is compiled. Once the pyxl codec is registered, any file starting with `# coding: pyxl` is run through the pyxl parser before compilation.
 
-To register the pyxl codec, one must import the [`pyxl.codec.register`](https://github.com/awable/cove/blob/master/pyxl/pyxl/codec/register.py) module. The [Installation Process](https://github.com/awable/cove/wiki/pyxl) makes it so that this always happens at python startup via the final `sudo python finish_install.py` step. What this step is doing is adding a file called `pyxl.pth` in your python site-packages directory, which imports the `pyxl.codec.register` module. Anything with a `.pth` extension in the site-packages directory is run automatically at python startup. Read more about that [here](http://docs.python.org/library/site.html).
+To register the pyxl codec, one must import the [`pyxl.codec.register`](https://github.com/awable/pyxl/blob/master/pyxl/pyxl/codec/register.py) module. The **Installation Process** makes it so that this always happens at python startup via the final `sudo python finish_install.py` step. What this step is doing is adding a file called `pyxl.pth` in your python site-packages directory, which imports the `pyxl.codec.register` module. Anything with a `.pth` extension in the site-packages directory is run automatically at python startup. Read more about that [here](http://docs.python.org/library/site.html).
 
 Some people may prefer avoiding adding pyxl.pth to their site-packages directory, in which case they should skip the final step of the installation process and explicitly import `pyxl.codec.register` in the entry point of their application.
 
-The pyxl encoding is a wrapper around utf-8, but every time it encounters a blob of HTML in the file, it runs it through python's [`HTMLParser`](http://docs.python.org/library/htmlparser.html) and replaces the HTML with python objects. As explained above, opening tags are converted into object instantiations for the respective tag, nested tags are passed in as arguments to the `append_children` method, and closing tags close the bracket to the `append_children` call. The code for these conversions can be seen [here](https://github.com/awable/cove/blob/master/pyxl/pyxl/codec/parser.py).
+The pyxl encoding is a wrapper around utf-8, but every time it encounters a blob of HTML in the file, it runs it through python's [`HTMLParser`](http://docs.python.org/library/htmlparser.html) and replaces the HTML with python objects. As explained above, opening tags are converted into object instantiations for the respective tag, nested tags are passed in as arguments to the `append_children` method, and closing tags close the bracket to the `append_children` call. The code for these conversions can be seen [here](https://github.com/awable/pyxl/blob/master/pyxl/pyxl/codec/parser.py).
 
 ### HTML Objects
 
-Though the syntactic sugar of being able to write HTML in python is pyxl's biggest usefulness, pyxl does also provide a basic framework for dealing with HTML tags as objects. This is not a full DOM implementation, but provides most of the necessary functionality. All the basic HTML tags are represented by objects defined in the [`pyxl.html`](https://github.com/awable/cove/blob/master/pyxl/pyxl/html.py) module, all of which inherit from the [`x_base`](https://github.com/awable/cove/blob/master/pyxl/pyxl/base.py) class.
+Though the syntactic sugar of being able to write HTML in python is pyxl's biggest usefulness, pyxl does also provide a basic framework for dealing with HTML tags as objects. This is not a full DOM implementation, but provides most of the necessary functionality. All the basic HTML tags are represented by objects defined in the [`pyxl.html`](https://github.com/awable/pyxl/blob/master/pyxl/pyxl/html.py) module, all of which inherit from the [`x_base`](https://github.com/awable/pyxl/blob/master/pyxl/pyxl/base.py) class.
 
 An HTML tag is rendered by calling the `to_string()` method (called automatically when tags are cast to strings), which recursively calls `to_string()` on all its children. Therefore, it should be noted that almost all the work happens only once `to_string()` is called. It is also at this stage where attribute values and data is escaped. Most of the work consists of string concatenations, and performance based on applications we've written is equivalent to templating engines like Cheetah. Note that there is probably some low hanging fruit in performance improvements that we haven't looked in to (mostly because it hasn't been a problem).
 
@@ -170,4 +170,8 @@ An HTML tag is rendered by calling the `to_string()` method (called automaticall
 
 ### Emacs
 
-Grab pyxl-mode.el from the downloaded package under pyxl/emacs/pyxl-mode.el and copy it from [here]()
+Grab pyxl-mode.el from the downloaded package under `pyxl/emacs/pyxl-mode.el` or copy it from [here](https://github.com/awable/pyxl/blob/master/emacs/pyxl-mode.el). To install, drop the file anywhere on your load path, and add the following to your ~/.emacs file (GNU Emacs) or ~/.xemacs/init.el file (XEmacs):
+
+    (autoload 'pyxl-mode "pyxl-mode" "Major mode for editing pyxl" t)
+    (setq auto-mode-alist
+         (cons '("\\.py\\'" . pyxl-mode) auto-mode-alist))
