@@ -148,9 +148,11 @@ class x_base(object):
 
     @staticmethod
     def render_child(child):
-        if isinstance(child, x_base): return child.to_string()
-        if type(child) is not rawhtml: return escape(child)
-        return child.render()
+        child_type = type(child)
+        if issubclass(child_type, x_base): return child.to_string()
+        if child_type is rawhtml: return child.render()
+        if child_type is type(None): return u''
+        return escape(child)
 
     @staticmethod
     def _fix_attribute_name(name):
