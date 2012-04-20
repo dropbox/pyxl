@@ -17,13 +17,17 @@ from pyxl.base import x_base
 class x_element(x_base):
     def get_base_element(self):
         # Adding classes costs ~10%
-        classes = [self.get_class()]
         out = self.rendered_element()
+        classes = [self.get_class()]
+
         while isinstance(out, x_element):
+            new_out = out.rendered_element()
             classes.append(out.get_class())
-            out = out.rendered_element()
+            out = new_out
+
         if isinstance(out, x_base):
             out.add_class(' '.join(classes))
+
         return out
 
     def to_string(self):
