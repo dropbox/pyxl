@@ -112,6 +112,8 @@ class x_base(object):
             raise Exception('<%s> has no attr named "%s"' % (self.__tag__, name))
         if value is not None:
             self.__attributes__[name] = value
+        else:
+            del self.__attributes__[name]
 
     def get_class(self):
         return self.attr('class', '')
