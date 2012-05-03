@@ -128,7 +128,7 @@ Arguments to a UI module are passed as attributes to the UI module tag. Attribut
                 <div>
                     <img src="{self.user.profile_picture}" style="float: left; margin-right: 10px;"/>
                     <div style="display: table-cell;">
-                        <div>{user.name}</div>
+                        <div>{self.user.name}</div>
                         {self.children()}
                     </div>
                 </div>)
