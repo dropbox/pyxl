@@ -59,8 +59,12 @@ Anything wrapped with {}'s is evaluated as a python expression. Please note that
 
     image_name = "bolton.png"
     image = <img src="/static/images/{image_name}" />
+    
     text = "Michael Bolton"
-    print <div>{image}{text}</div>
+    block = <div>{image}{text}</div>
+    
+    element_list = [image, text]
+    block2 = <div>{element_list}</div>
 
 ### Dynamic Elements
 
@@ -71,7 +75,7 @@ Pyxl converts tags into python objects in the background, which inherit from a c
     for path, text in items:
         nav.append(<li>{text}</li>)
 
-Another useful function is `children()`, which returns all the child nodes for an element. `children()` accepts an optional selector string as an argument to filter the children. Currently, there is only support for filtering the children by a class (format: ".class_name"), id (format: "#id_string") or tag name. Here is a snippet which adds all `input` elements from an existing form to a new form:
+Another useful function is `children()`, which returns a list of all the child nodes for an element. `children()` accepts an optional selector string as an argument to filter the children. Currently, there is only support for filtering the children by a class (format: ".class_name"), id (format: "#id_string") or tag name. Here is a snippet which adds all `input` elements from an existing form to a new form:
 
     new_form = <form action="/submit" method="POST">{old_form.children("input")}</form>
 
@@ -107,32 +111,37 @@ The above script will print out:
 
 UI Modules are especially useful for creating re-usable building blocks in your application, making it quicker to implement new features, and keeping the UI consistent. Pyxl thinks of UI modules as user defined HTML tags, and so they are used just like you would use a `<div>` or any other tag.
 
-Creating UI modules in Pyxl simply means creating a class that inherits from [`x_element`](https://github.com/awable/pyxl/blob/master/pyxl/pyxl/element.py) and implements the `render()` method. Modules must be prefixed with `x_`. This is an arbitrary requirement, but is useful in separating out pyxl modules from other things. To demonstrate, a useful UI module is a content box, which is a box with a linked title and some arbitrary content:
+Creating UI modules in Pyxl simply means creating a class that inherits from [`x_element`](https://github.com/awable/pyxl/blob/master/pyxl/pyxl/element.py) and implements the `render()` method. Modules must be prefixed with `x_`. This is an arbitrary requirement, but is useful in separating out pyxl modules from other things. 
+
+Arguments to a UI module are passed as attributes to the UI module tag. Attribute values for these tags need not evaluate to samething that can be cast to unicode, ONLY if the attribute value is a single python expression i.e. the only thing inside the quotes is a {} wrapped python expression. This allows one to pass in any type to a UI module. To demonstrate, a useful UI module is a user badge, which displays a user profile picture with the user's name and some arbitrary content to the right of it:
 
     # coding: pyxl
     from pyxl.html import *
     from pyxl.element import x_element
 
-    class x_content_box(x_element):
+    class x_user_badge(x_element):
         __attrs__ = {
-            'title': unicode,
-            'href': unicode,
+            'user': object,
         }
         def render(self):
             return (
-                <div class="content_box">
-                    <a href="{self.href}"><h3>{self.title}</h3></a>
-                    {self.children()}
+                <div>
+                    <img src="{self.user.profile_picture}" style="float: left; margin-right: 10px;"/>
+                    <div style="display: table-cell;">
+                        <div>{user.name}</div>
+                        {self.children()}
+                    </div>
                 </div>)
 
-This makes the tag `<content_box>` available to us which accepts `title` and `href` as attributes. Here is an example of this new UI module being used.
+This makes the tag `<user_badge>` available to us which accepts `user` as an attribute which is an object that contains the user's name and profile picture. Here is an example of this new UI module being used.
 
     # coding: pyxl
     from pyx.xhtml import *
-    from some_module import x_content_box
+    from some_module import x_user_badge
 
+    user = User.get(some_user_id)
     content = <div>Any arbitrary content...</div>
-    print <content_box title="Content Box Title" href="/content_link">{content}</content_box>
+    print <user_badge user="{user}">{content}</user_badge>
 
 Some things to note about UI modules.
 
