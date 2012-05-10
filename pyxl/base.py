@@ -14,7 +14,7 @@
 
 import sys
 import random
-from pyxl.utils import *
+from pyxl.utils import escape, rawhtml
 
 class x_base_metaclass(type):
     def __init__(self, name, parents, attrs):
@@ -143,7 +143,7 @@ class x_base(object):
         raise NotImplementedError()
 
     def __str__(self):
-        return self.to_string().encode('utf-8')
+        return self.to_string().encode('utf8')
 
     def __unicode__(self):
         return self.to_string()
