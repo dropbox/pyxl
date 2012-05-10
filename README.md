@@ -41,7 +41,7 @@ Pyxl converts HTML tags into python objects before the file is run through the i
 
     print x_head().append_children(x_body().append_children("Hello World!"))
 
-Pyxl's usefulness comes from being able to write HTML rather than unwieldy object instantiations and function calls. Pyxl automatically adds objects for all HTML tags to Python builtins, so there is no need to import x_head or x_body in the example above. The conversion is relatively straightforward: Opening tags are converted into object instantiations for the respective tag, nested tags are passed in as arguments to the `append_children` method, and closing tags close the bracket to the `append_children` call. As a result, a big advantage of this is that stack traces on errors map directly to what you've written. To learn more about how Pyxl does this, see the **Implementation Details** section below.
+Pyxl's usefulness comes from being able to write HTML rather than unwieldy object instantiations and function calls. Pyxl automatically adds objects for all HTML tags to Python builtins, so there is no need to import `x_head` or `x_body` in the example above. The conversion is relatively straightforward: Opening tags are converted into object instantiations for the respective tag, nested tags are passed in as arguments to the `append_children` method, and closing tags close the bracket to the `append_children` call. As a result, a big advantage of this is that stack traces on errors map directly to what you've written. To learn more about how Pyxl does this, see the **Implementation Details** section below.
 
 ## Documentation
 
