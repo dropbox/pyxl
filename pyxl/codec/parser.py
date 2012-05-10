@@ -96,14 +96,28 @@ class PyxlParser(HTMLParser):
         self._appendString(')')
 
     def _handle_attr_value(self, attr_value):
-        if attr_value and attr_value[0] == '{':
-            assert attr_value[-1] == '}', "Expecting } got %s" % attr_value[-1]
-            self._appendString(attr_value[1:-1])
+        text_and_code_parts = self._get_text_and_code_parts(attr_value)
+        if len(text_and_code_parts) == 1:
+            part, is_code = text_and_code_parts[0]
+            if is_code:
+                self._appendString(part)
+            else:
+                self._appendString('u"')
+                self._appendString(part)
+                self._appendString('"')
         else:
-            attr_value = attr_value.replace('"', '\\"')
-            self._appendString('"".join(map(unicode, (')
-            self._handle_text_and_code(attr_value, is_attr_value=True)
-            self._appendString(')))')
+            self._appendString('u"".join((')
+            for part, is_code in text_and_code_parts:
+                if is_code:
+                    self._appendString('unicode(')
+                    self._appendString(part)
+                    self._appendString(')')
+                else:
+                    self._appendString('u"')
+                    self._appendString(part)
+                    self._appendString('"')
+                self._appendString(', ')
+            self._appendString('))')
 
     @staticmethod
     def _safeAttrName(name):
@@ -141,6 +155,16 @@ class PyxlParser(HTMLParser):
     def handle_charref(self, name):
         self.collectedData += '&#%s' % name
 
+    def handle_comment(self, comment):
+        self._appendString('x_html_comment(comment="')
+        self._appendString(' '.join(comment.replace('"', '\\"').split()))
+        self._appendString('"),')
+
+    def handle_decl(self, decl):
+        self._appendString('x_html_decl(decl="')
+        self._appendString(' '.join(decl.replace('"', '\\"').split()))
+        self._appendString('"),')
+
     whitespaceRe = re.compile(ur"[\s]+", re.U)
     def _handle_enddata(self):
 
@@ -150,34 +174,40 @@ class PyxlParser(HTMLParser):
             self.collectedData = ''
             return
 
-        self._handle_text_and_code(self.collectedData)
+        text_and_code_parts = self._get_text_and_code_parts(self.collectedData)
+        for part, is_code in text_and_code_parts:
+            if is_code:
+                self._appendString(part)
+            else:
+                self._appendString('rawhtml(u"')
+                self._appendString(part)
+                self._appendString('")')
+            self._appendString(', ')
+
         self.collectedData = ''
 
     TEXT_AND_CODE_RE = re.compile('((?<!\\\\){.*?(?<!\\\\)})', re.S)
-    def _handle_text_and_code(self, data, is_attr_value=False):
-        parts = [part for part in self.TEXT_AND_CODE_RE.split(data) if part]
+    def _get_text_and_code_parts(self, data):
+        parts = []
+        raw_parts = (part.strip('\n') for part in self.TEXT_AND_CODE_RE.split(data))
 
-        for part in parts:
-            is_python = part[0] == '{'
+        for part in raw_parts:
+            if not part: continue
+
+            is_code = part[0] == '{'
             part = part.replace('\}', '}')
             part = part.replace('\{', '{')
 
-            if is_python:
+            if is_code:
                 part = part.replace('\n', ' ')
                 part = part.replace('\r', ' ')
-                self._appendString(part[1:-1])
-                self._appendString(', ')
-            elif part.strip('\n'):
+                part = part[1:-1]
+            else:
                 # escape newlines
-                part = part.strip('\n')
                 part = part.replace('\n', '\\n')
                 part = part.replace('\r', '\\r')
                 part = part.replace('"', '\\"')
-                if not is_attr_value:
-                    self._appendString('rawhtml(')
-                self._appendString('u"')
-                self._appendString(part)
-                self._appendString('"')
-                if not is_attr_value:
-                    self._appendString(')')
-                self._appendString(', ')
+
+            parts.append((part, is_code))
+
+        return parts
