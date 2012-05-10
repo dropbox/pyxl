@@ -34,4 +34,6 @@ class rawhtml(object):
         self.text = text or ''
 
     def render(self):
+        if type(self.text) != unicode:
+            return unicode(self.text, 'utf8')
         return self.text
