@@ -12,7 +12,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-from pyxl.utils import *
+from pyxl.utils import escape, unescape, rawhtml
 from pyxl.base import x_base
 
 class x_html_element(x_base):
@@ -38,6 +38,22 @@ class x_html_element_nochild(x_base):
             out.extend((u' ', name, u'="', escape(value), u'"'))
         out.append(u' />')
         return u''.join(out)
+
+class x_html_comment(x_base):
+    __attrs__ = {
+        'comment': unicode,
+        }
+
+    def to_string(self):
+        return '<!--%s-->' % self.attr('comment')
+
+class x_html_decl(x_base):
+    __attrs__ = {
+        'decl': unicode,
+        }
+
+    def to_string(self):
+        return '<!%s>' % self.attr('decl')
 
 class x_frag(x_base):
     def to_string(self):
