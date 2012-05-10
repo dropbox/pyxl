@@ -1,4 +1,5 @@
 # coding: pyxl
-from pyxl.html import *
+
+from pyxl import html
 
 print <html><body>Hello World!</body></html>

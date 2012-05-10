@@ -12,7 +12,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-from pyxl.utils import *
+from pyxl.utils import escape
 from pyxl.base import x_base
 
 class x_html_element(x_base):
@@ -54,6 +54,19 @@ class x_html_decl(x_base):
 
     def to_string(self):
         return '<!%s>' % self.attr('decl')
+
+class x_rawhtml(x_html_element_nochild):
+    __attrs__= {
+        'text': unicode,
+        }
+
+    def to_string(self):
+        if type(self.text) != unicode:
+            return unicode(self.text, 'utf8')
+        return self.text
+
+def rawhtml(text):
+    return x_rawhtml(text=text)
 
 class x_frag(x_base):
     def to_string(self):

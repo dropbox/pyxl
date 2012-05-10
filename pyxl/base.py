@@ -14,7 +14,7 @@
 
 import sys
 import random
-from pyxl.utils import *
+from pyxl.utils import escape
 
 class x_base_metaclass(type):
     def __init__(self, name, parents, attrs):
@@ -150,10 +150,8 @@ class x_base(object):
 
     @staticmethod
     def render_child(child):
-        child_type = type(child)
-        if issubclass(child_type, x_base): return child.to_string()
-        if child_type is rawhtml: return child.render()
-        if child_type is type(None): return u''
+        if isinstance(child, x_base): return child.to_string()
+        if child is None: return u''
         return escape(child)
 
     @staticmethod

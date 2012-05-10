@@ -79,9 +79,11 @@ class PyxlParser(HTMLParser):
 
             self._appendString('bool(')
             self._handle_attr_value(attrs[0][1])
-            self._appendString(') and x_frag()')
+            self._appendString(') and html.x_frag()')
             return
 
+        if tag in self.HTML_TAGS:
+            self._appendString('html.')
         self._appendString('x_%s(' % tag)
 
         first_attr = True
@@ -156,12 +158,12 @@ class PyxlParser(HTMLParser):
         self.collectedData += '&#%s' % name
 
     def handle_comment(self, comment):
-        self._appendString('x_html_comment(comment="')
+        self._appendString('html.x_html_comment(comment="')
         self._appendString(' '.join(comment.replace('"', '\\"').split()))
         self._appendString('"),')
 
     def handle_decl(self, decl):
-        self._appendString('x_html_decl(decl="')
+        self._appendString('html.x_html_decl(decl="')
         self._appendString(' '.join(decl.replace('"', '\\"').split()))
         self._appendString('"),')
 
@@ -179,7 +181,7 @@ class PyxlParser(HTMLParser):
             if is_code:
                 self._appendString(part)
             else:
-                self._appendString('rawhtml(u"')
+                self._appendString('html.rawhtml(u"')
                 self._appendString(part)
                 self._appendString('")')
             self._appendString(', ')
@@ -211,3 +213,64 @@ class PyxlParser(HTMLParser):
             parts.append((part, is_code))
 
         return parts
+
+    HTML_TAGS = set((
+        'html_comment',
+        'html_decl',
+        'rawhtml',
+        'frag',
+        'a',
+        'b',
+        'body',
+        'br',
+        'button',
+        'code',
+        'div',
+        'em',
+        'embed',
+        'form',
+        'frame',
+        'frameset',
+        'h1',
+        'h2',
+        'h3',
+        'h4',
+        'h5',
+        'h6',
+        'hr',
+        'head',
+        'header',
+        'html',
+        'i',
+        'iframe',
+        'img',
+        'input',
+        'label',
+        'li',
+        'link',
+        'meta',
+        'noframes',
+        'noscript',
+        'object',
+        'ol',
+        'option',
+        'p',
+        'pre',
+        'script',
+        'section',
+        'select',
+        'span',
+        'strong',
+        'style',
+        'table',
+        'td',
+        'th',
+        'tr',
+        'textarea',
+        'title',
+        'tr',
+        'tbody',
+        'thead',
+        'u',
+        'ul',
+        'canvas'))

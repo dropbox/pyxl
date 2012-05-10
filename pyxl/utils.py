@@ -28,12 +28,3 @@ def escape(obj):
 
 def unescape(obj):
     return xml_unescape(unicode(obj), unescape_other)
-
-class rawhtml(object):
-    def __init__(self, text):
-        self.text = text or ''
-
-    def render(self):
-        if type(self.text) != unicode:
-            return unicode(self.text, 'utf8')
-        return self.text
