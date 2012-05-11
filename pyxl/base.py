@@ -132,8 +132,8 @@ class x_base(object):
     def attributes(self):
         return self.__attributes__
 
-    def set_attributes(self, **kwargs):
-        for name, value in kwargs.iteritems():
+    def set_attributes(self, attrs_dict):
+        for name, value in attrs_dict.iteritems():
             self.set_attr(name, value)
 
     def allows_attribute(self, name):
