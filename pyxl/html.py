@@ -248,6 +248,7 @@ class x_input(x_html_element_nochild):
         'value': unicode,
         'accesskey': unicode,
         'tabindex': unicode,
+        'required': unicode,
         }
 
 
