@@ -342,6 +342,7 @@ class x_select(x_html_element):
         'name': unicode,
         'size': unicode,
         'tabindex': unicode,
+        'required': unicode,
         }
 
 class x_span(x_html_element):
