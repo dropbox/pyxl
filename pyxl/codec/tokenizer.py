@@ -35,6 +35,7 @@ def pyxl_tokenize(readline):
              (last_nw_token[0] == tokenize.OP and last_nw_token[1] == '[') or
              (last_nw_token[0] == tokenize.OP and last_nw_token[1] == '{') or
              (last_nw_token[0] == tokenize.OP and last_nw_token[1] == ',') or
+             (last_nw_token[0] == tokenize.OP and last_nw_token[1] == ':') or
              (last_nw_token[0] == tokenize.NAME and last_nw_token[1] == 'print') or
              (last_nw_token[0] == tokenize.NAME and last_nw_token[1] == 'return'))):
             token = get_pyxl_token(token, tokens)
