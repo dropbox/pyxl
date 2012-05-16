@@ -277,6 +277,7 @@ class x_meta(x_html_element_nochild):
     __attrs__ = {
         'http-equiv': unicode,
         'name': unicode,
+        'property': unicode,
         'content': unicode,
         "scheme": unicode,
         }
