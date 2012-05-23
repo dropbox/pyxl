@@ -16,6 +16,8 @@ import tokenize
 from HTMLParser import HTMLParseError
 from pyxl.codec.parser import PyxlParser
 
+class PyxlParseError(Exception): pass
+
 def pyxl_tokenize(readline):
     last_nw_token = None
     prev_token = None
@@ -72,17 +74,17 @@ def get_pyxl_token(start_token, tokens):
         try:
             pyxl_parser.feed(token)
         except HTMLParseError, html_ex:
-            msg = 'HTMLParseError: %s (line:%d %s)' % (html_ex.msg, tstart[0], tline.strip())
-            raise Exception(msg)
+            msg = 'HTMLParseError: %s (line:%d: %s)' % (html_ex.msg, tstart[0], tline.strip())
+            raise PyxlParseError(msg)
         except AssertionError, assert_ex:
-            msg = '%s (line:%d %s)' % (assert_ex, tstart[0], tline.strip())
-            raise Exception(msg)
+            msg = '%s (line:%d: %s)' % (assert_ex, tstart[0], tline.strip())
+            raise PyxlParseError(msg)
 
         if pyxl_parser.done(): break
 
     if not pyxl_parser.done():
-        lines = ['<%s> at (line:%d %s)' % (tag, row, line.strip())
+        lines = ['<%s> at (line:%d: %s)' % (tag, row, line.strip())
                  for tag, row, line in pyxl_parser.openTags]
-        raise Exception('Unclosed Tags: %s' % ', '.join(lines))
+        raise PyxlParseError('Unclosed Tags: %s' % ', '.join(lines))
 
     return pyxl_parser.getToken()
