@@ -30,6 +30,14 @@ def pyxl_decode(input, errors='strict'):
     stream = cStringIO.StringIO(input)
     return utf_8.decode(pyxl_transform(stream), errors)
 
+class PyxlIncrementalDecoder(utf_8.IncrementalDecoder):
+    def decode(self, input, final=False):
+        self.buffer += input
+        if final:
+            stream = cStringIO.StringIO(self.buffer)
+            self.buffer = ''
+            return super(PyxlIncrementalDecoder, self).decode(pyxl_transform(stream), final=True)
+
 class PyxlStreamReader(utf_8.StreamReader):
     def __init__(self, *args, **kwargs):
         codecs.StreamReader.__init__(self, *args, **kwargs)
@@ -44,7 +52,7 @@ def search_function(encoding):
         encode = utf8.encode,
         decode = pyxl_decode,
         incrementalencoder = utf8.incrementalencoder,
-        incrementaldecoder = utf8.incrementaldecoder,
+        incrementaldecoder = PyxlIncrementalDecoder,
         streamreader = PyxlStreamReader,
         streamwriter = utf8.streamwriter)
 
