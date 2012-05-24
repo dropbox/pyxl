@@ -17,17 +17,23 @@ import traceback
 from encodings import utf_8
 from pyxl.codec.tokenizer import pyxl_tokenize
 
+def pyxl_transform(stream):
+    try:
+        output = tokenize.untokenize(pyxl_tokenize(stream.readline))
+    except Exception, ex:
+        print ex
+        raise
+
+    return output
+
+def pyxl_decode(input, errors='strict'):
+    stream = cStringIO.StringIO(input)
+    return utf_8.decode(pyxl_transform(stream), errors)
+
 class PyxlStreamReader(utf_8.StreamReader):
     def __init__(self, *args, **kwargs):
         codecs.StreamReader.__init__(self, *args, **kwargs)
-
-        try:
-            data = tokenize.untokenize(pyxl_tokenize(self.stream.readline))
-        except Exception, ex:
-            print ex
-            raise
-
-        self.stream = cStringIO.StringIO(data)
+        self.stream = cStringIO.StringIO(pyxl_transform(self.stream))
 
 def search_function(encoding):
     if encoding != 'pyxl': return None
@@ -36,7 +42,7 @@ def search_function(encoding):
     return codecs.CodecInfo(
         name = 'pyxl',
         encode = utf8.encode,
-        decode = utf8.decode,
+        decode = pyxl_decode,
         incrementalencoder = utf8.incrementalencoder,
         incrementaldecoder = utf8.incrementaldecoder,
         streamreader = PyxlStreamReader,
