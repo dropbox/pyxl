@@ -11,9 +11,10 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations
 # under the License.
+from __future__ import with_statement
 
 import codecs, cStringIO, encodings, tokenize
-import traceback
+import sys
 from encodings import utf_8
 from pyxl.codec.tokenizer import pyxl_tokenize
 
@@ -57,3 +58,37 @@ def search_function(encoding):
         streamwriter = utf8.streamwriter)
 
 codecs.register(search_function)
+
+_USAGE = """\
+Wraps a python command to allow it to recognize pyxl-coded files with
+no source modifications.
+
+Usage:
+    python -m pyxl.codec.register -m module.to.run [args...]
+    python -m pyxl.codec.register path/to/script.py [args...]
+"""
+
+if __name__ == '__main__':
+    if len(sys.argv) >= 3 and sys.argv[1] == '-m':
+        mode = 'module'
+        module = sys.argv[2]
+        del sys.argv[1:3]
+    elif len(sys.argv) >= 2:
+        mode = 'script'
+        script = sys.argv[1]
+        sys.argv = sys.argv[1:]
+    else:
+        print >>sys.stderr, _USAGE
+        sys.exit(1)
+
+    if mode == 'module':
+        import runpy
+        runpy.run_module(module, run_name='__main__', alter_sys=True)
+    elif mode == 'script':
+        with open(script) as f:
+            global __file__
+            __file__ = script
+            # Use globals as our "locals" dictionary so that something
+            # that tries to import __main__ (e.g. the unittest module)
+            # will see the right things.
+            exec f.read() in globals(), globals()
