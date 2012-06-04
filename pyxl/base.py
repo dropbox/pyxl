@@ -143,7 +143,7 @@ class x_base(object):
         raise NotImplementedError()
 
     def __str__(self):
-        return self.to_string().encode('utf8')
+        return self.to_string()
 
     def __unicode__(self):
         return self.to_string()
