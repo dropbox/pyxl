@@ -45,7 +45,7 @@ class x_html_comment(x_base):
         }
 
     def to_string(self):
-        return '<!--%s-->' % self.attr('comment')
+        return None
 
 class x_html_decl(x_base):
     __attrs__ = {
@@ -61,7 +61,7 @@ class x_rawhtml(x_html_element_nochild):
         }
 
     def to_string(self):
-        if type(self.text) != unicode:
+        if not isinstance(self.text, unicode):
             return unicode(self.text, 'utf8')
         return self.text
 
