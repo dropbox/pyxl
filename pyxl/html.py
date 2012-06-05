@@ -45,7 +45,7 @@ class x_html_comment(x_base):
         }
 
     def to_string(self):
-        return None
+        return u''
 
 class x_html_decl(x_base):
     __attrs__ = {
