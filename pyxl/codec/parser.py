@@ -52,7 +52,8 @@ class PyxlParser(HTMLParser):
         if cur_row == prev_row and cur_col > prev_col:
             HTMLParser.feed(self, ' ')
 
-        HTMLParser.feed(self, tvalue)
+        if ttype != tokenize.COMMENT:
+            HTMLParser.feed(self, tvalue)
 
     def done(self):
         return not len(self.openTags) and not self.rawdata
