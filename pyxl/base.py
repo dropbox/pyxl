@@ -36,16 +36,41 @@ class x_base(object):
 
     __metaclass__ = x_base_metaclass
     __attrs__ = {
-        'id': unicode,
+        # HTML attributes
+        'accesskey': unicode,
         'class': unicode,
+        'dir': unicode,
+        'id': unicode,
+        'lang': unicode,
         'style': unicode,
+        'tabindex': unicode,
+        'title': unicode,
+        'xml:lang': unicode,
+
+        # JS attributes
+        'onabort': unicode,
+        'onblur': unicode,
+        'onchange': unicode,
         'onclick': unicode,
         'ondblclick': unicode,
-        'onmouseup': unicode,
+        'onerror': unicode,
+        'onfocus': unicode,
+        'onkeydown': unicode,
+        'onkeypress': unicode,
+        'onkeyup': unicode,
+        'onload': unicode,
         'onmousedown': unicode,
-        'onmouseover': unicode,
+        'onmouseenter': unicode,
+        'onmouseleave': unicode,
+        'onmousemove': unicode,
         'onmouseout': unicode,
-        'title': unicode,
+        'onmouseover': unicode,
+        'onmouseup': unicode,
+        'onreset': unicode,
+        'onresize': unicode,
+        'onselect': unicode,
+        'onsubmit': unicode,
+        'onunload': unicode,
         }
 
     def __init__(self, **kwargs):
