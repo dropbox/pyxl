@@ -13,14 +13,14 @@
 # under the License.
 from __future__ import with_statement
 
-import codecs, cStringIO, encodings, tokenize
+import codecs, cStringIO, encodings
 import sys
 from encodings import utf_8
-from pyxl.codec.tokenizer import pyxl_tokenize
+from pyxl.codec.tokenizer import pyxl_tokenize, pyxl_untokenize
 
 def pyxl_transform(stream):
     try:
-        output = tokenize.untokenize(pyxl_tokenize(stream.readline))
+        output = pyxl_untokenize(pyxl_tokenize(stream.readline))
     except Exception, ex:
         print ex
         raise

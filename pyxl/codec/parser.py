@@ -60,7 +60,7 @@ class PyxlParser(HTMLParser):
 
     def getToken(self):
         endPos = (self.row, self.col)
-        return (tokenize.STRING, ''.join(self.buffer), self.startPos, endPos, None)
+        return (tokenize.STRING, ''.join(self.buffer), self.startPos, endPos, '')
 
     def _appendRows(self, num_rows):
         self.row += num_rows
