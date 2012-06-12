@@ -14,6 +14,7 @@
 
 import xml.sax.saxutils
 from metaserver.common import exclog2_util
+from metaserver.common.util import report_exception
 
 xml_escape = xml.sax.saxutils.escape
 xml_unescape = xml.sax.saxutils.unescape
@@ -28,7 +29,7 @@ def escape(obj):
     try:
         obj = unicode(obj)
     except UnicodeDecodeError:
-        exclog2_util.report_exception(severity=exclog2_util.SeverityType.CRITICAL)
+        report_exception(severity2=exclog2_util.SeverityType.CRITICAL)
         obj = unicode(obj, 'utf8')
 
     return xml_escape(obj, escape_other)
