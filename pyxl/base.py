@@ -16,6 +16,12 @@ import sys
 import random
 from pyxl.utils import escape
 
+from metaserver.common import exclog2_util
+from metaserver.common.util import raise_and_report
+
+class PyxlException(Exception):
+    pass
+
 class x_base_metaclass(type):
     def __init__(self, name, parents, attrs):
         super(x_base_metaclass, self).__init__(name, parents, attrs)
@@ -128,15 +134,35 @@ class x_base(object):
     def attr(self, name, default=None):
         # this check is fairly expensive (~8% of cost)
         if not self.allows_attribute(name):
-            raise Exception('<%s> has no attr named "%s"' % (self.__tag__, name))
+            raise PyxlException('<%s> has no attr named "%s"' % (self.__tag__, name))
         return self.__attributes__.get(name, default)
 
     def set_attr(self, name, value):
         # this check is fairly expensive (~8% of cost)
         if not self.allows_attribute(name):
-            raise Exception('<%s> has no attr named "%s"' % (self.__tag__, name))
+            raise PyxlException('<%s> has no attr named "%s"' % (self.__tag__, name))
+
         if value is not None:
+
+            attr_type = self.__attrs__.get(name, unicode)
+
+            try:
+                # Validate type of attr and cast to correct type if possible
+                value = value if isinstance(value, attr_type) else attr_type(value)
+            except Exception:
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                exception = PyxlException('incorrect type for "%s" in <%s>. expected %s, got %s' % (
+                    name, self.__tag__, attr_type, type(value)))
+
+                if exc_type == UnicodeDecodeError:
+                    # special casing unicode errors till we've fixed them all in our logs
+                    value = unicode(value, 'utf8')
+                    raise_and_report(exception, severity2=exclog2_util.SeverityType.CRITICAL)
+                else:
+                    raise exception
+
             self.__attributes__[name] = value
+
         elif name in self.__attributes__:
             del self.__attributes__[name]
 
