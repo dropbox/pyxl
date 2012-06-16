@@ -225,6 +225,7 @@ class PyxlParser(HTMLParser):
         'body',
         'br',
         'button',
+        'canvas',
         'code',
         'div',
         'em',
@@ -257,6 +258,7 @@ class PyxlParser(HTMLParser):
         'option',
         'p',
         'pre',
+        'progress',
         'script',
         'section',
         'select',
@@ -274,4 +276,4 @@ class PyxlParser(HTMLParser):
         'thead',
         'u',
         'ul',
-        'canvas'))
+        ))

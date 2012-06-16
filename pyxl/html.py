@@ -421,6 +421,12 @@ class x_param(x_html_element):
 class x_pre(x_html_element):
    pass
 
+class x_progress(x_html_element):
+    __attrs__ = {
+        'max': int,
+        'value': int,
+    }
+
 class x_q(x_html_element):
     __attrs__ = {
         'cite': unicode,
