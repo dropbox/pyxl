@@ -315,6 +315,7 @@ class x_input(x_html_element_nochild):
         'autocomplete': unicode,
         'autocorrect': unicode,
         'required': unicode,
+        'spellcheck': unicode,
         }
 
 class x_ins(x_html_element):
