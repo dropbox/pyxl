@@ -34,8 +34,9 @@ class x_base_metaclass(type):
             assert '_' not in attr_name, (
                 "%s: '_' not allowed in attr names, use '-' instead" % attr_name)
 
-        self_attrs.update(parent_attrs)
-        setattr(self, '__attrs__', self_attrs)
+        combined_attrs = dict(parent_attrs)
+        combined_attrs.update(self_attrs)
+        setattr(self, '__attrs__', combined_attrs)
         setattr(self, '__tag__', name[2:])
 
 class x_base(object):
@@ -49,7 +50,7 @@ class x_base(object):
         'id': unicode,
         'lang': unicode,
         'style': unicode,
-        'tabindex': unicode,
+        'tabindex': int,
         'title': unicode,
         'xml:lang': unicode,
 
