@@ -61,8 +61,11 @@ class x_cond_comment(x_base):
         }
 
     def to_string(self):
+        # allow '&', escape everything else from cond
         cond = self.__attributes__.get('cond', '')
-        out = [u'<!--[if %s]>' % escape(cond)]
+        cond = '&'.join(map(escape, cond.split('&')))
+
+        out = [u'<!--[if %s]>' % cond]
 
         for child in self.__children__:
             out.append(x_base.render_child(child))
