@@ -99,6 +99,12 @@ class x_area(x_html_element_nochild):
         'target': unicode,
         }
 
+class x_article(x_html_element):
+    pass
+
+class x_aside(x_html_element):
+    pass
+
 class x_b(x_html_element):
    pass
 
@@ -161,6 +167,9 @@ class x_colgroup(x_html_element):
         'width': unicode,
         }
 
+class x_datalist(x_html_element):
+    pass
+
 class x_dd(x_html_element):
    pass
 
@@ -200,6 +209,9 @@ class x_embed(x_html_element):
 
 class x_fieldset(x_html_element):
    pass
+
+class x_footer(x_html_element):
+    pass
 
 class x_form(x_html_element):
     __attrs__ = {
@@ -302,14 +314,20 @@ class x_input(x_html_element_nochild):
         'accept': unicode,
         'align': unicode,
         'alt': unicode,
+        'autofocus': unicode,
         'checked': unicode,
         'disabled': unicode,
+        'list': unicode,
+        'max': unicode,
         'maxlength': unicode,
+        'min': unicode,
         'name': unicode,
+        'pattern': unicode,
         'placeholder': unicode,
         'readonly': unicode,
         'size': unicode,
         'src': unicode,
+        'step': unicode,
         'type': unicode,
         'value': unicode,
         'autocomplete': unicode,
@@ -363,6 +381,9 @@ class x_meta(x_html_element_nochild):
         'property': unicode,
         "scheme": unicode,
         }
+
+class x_nav(x_html_element):
+    pass
 
 class x_noframes(x_html_element):
    pass
