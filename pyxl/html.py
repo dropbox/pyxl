@@ -55,6 +55,21 @@ class x_html_decl(x_base):
     def to_string(self):
         return '<!%s>' % self.attr('decl')
 
+class x_cond_comment(x_base):
+    __attrs__ = {
+        'cond': unicode,
+        }
+
+    def to_string(self):
+        cond = self.__attributes__.get('cond', '')
+        out = [u'<!--[if %s]>' % escape(cond)]
+
+        for child in self.__children__:
+            out.append(x_base.render_child(child))
+
+        out.append(u'<![endif]-->')
+        return u''.join(out)
+
 class x_rawhtml(x_html_element_nochild):
     __attrs__= {
         'text': unicode,

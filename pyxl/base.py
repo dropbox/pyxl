@@ -16,8 +16,6 @@ import sys
 import random
 from pyxl.utils import escape
 
-from metaserver.common import exclog2_util
-from metaserver.common.util import raise_and_report
 
 class PyxlException(Exception):
     pass

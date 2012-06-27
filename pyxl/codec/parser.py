@@ -229,6 +229,7 @@ class PyxlParser(HTMLParser):
         'button',
         'canvas',
         'code',
+        'cond_comment',
         'div',
         'em',
         'embed',
