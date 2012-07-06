@@ -16,9 +16,6 @@ import sys
 import random
 from pyxl.utils import escape
 
-from metaserver.common import exclog2_util
-from metaserver.common.util import raise_and_report
-
 class PyxlException(Exception):
     pass
 
@@ -157,6 +154,9 @@ class x_base(object):
                 exception = PyxlException(msg)
 
                 if exc_type == UnicodeDecodeError:
+                    from metaserver.common import exclog2_util
+                    from metaserver.common.util import raise_and_report
+
                     # special casing unicode errors till we've fixed them all in our logs
                     value = unicode(value, 'utf8')
                     severity = exclog2_util.SeverityType.CRITICAL

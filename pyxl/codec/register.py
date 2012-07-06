@@ -27,17 +27,21 @@ def pyxl_transform(stream):
 
     return output
 
+def pyxl_transform_string(text):
+    stream = cStringIO.StringIO(text)
+    return pyxl_transform(stream)
+
 def pyxl_decode(input, errors='strict'):
-    stream = cStringIO.StringIO(input)
-    return utf_8.decode(pyxl_transform(stream), errors)
+    return utf_8.decode(pyxl_transform_string(input), errors)
 
 class PyxlIncrementalDecoder(utf_8.IncrementalDecoder):
     def decode(self, input, final=False):
         self.buffer += input
         if final:
-            stream = cStringIO.StringIO(self.buffer)
+            buff = self.buffer
             self.buffer = ''
-            return super(PyxlIncrementalDecoder, self).decode(pyxl_transform(stream), final=True)
+            return super(PyxlIncrementalDecoder, self).decode(
+                pyxl_transform_string(buff), final=True)
 
 class PyxlStreamReader(utf_8.StreamReader):
     def __init__(self, *args, **kwargs):
