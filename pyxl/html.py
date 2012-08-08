@@ -476,6 +476,7 @@ class x_samp(x_html_element):
 
 class x_script(x_html_element):
     __attrs__ = {
+        'async': unicode,
         'charset': unicode,
         'defer': unicode,
         'src': unicode,
