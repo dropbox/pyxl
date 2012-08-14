@@ -13,7 +13,7 @@
 # under the License.
 
 import sys
-import random
+from Crypto.Random import random
 from pyxl.utils import escape
 
 class PyxlException(Exception):
