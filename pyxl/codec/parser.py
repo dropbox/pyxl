@@ -13,6 +13,7 @@
 # under the License.
 
 import re, tokenize
+from pyxl import html
 from HTMLParser import HTMLParser
 
 class PyxlParser(HTMLParser):
@@ -44,7 +45,7 @@ class PyxlParser(HTMLParser):
         if cur_row > prev_row:
             self._appendRows(cur_row - prev_row)
 
-        # are we on a muliline statement?
+        # are we on a multiline statement?
         if end_row > cur_row:
             self._appendRows(end_row - cur_row)
 
@@ -83,9 +84,10 @@ class PyxlParser(HTMLParser):
             self._appendString(') and html.x_frag()')
             return
 
-        if tag in self.HTML_TAGS:
+        x_tag = 'x_%s' % tag
+        if hasattr(html, x_tag):
             self._appendString('html.')
-        self._appendString('x_%s(' % tag)
+        self._appendString('%s(' % x_tag)
 
         first_attr = True
         for attr_name, attr_value in attrs:
@@ -215,75 +217,3 @@ class PyxlParser(HTMLParser):
 
         return parts
 
-    HTML_TAGS = set((
-        'html_comment',
-        'html_decl',
-        'rawhtml',
-        'frag',
-        'a',
-        'article',
-        'aside',
-        'b',
-        'body',
-        'br',
-        'button',
-        'canvas',
-        'cite',
-        'code',
-        'cond_comment',
-        'dfn',
-        'div',
-        'em',
-        'embed',
-        'footer',
-        'form',
-        'frame',
-        'frameset',
-        'h1',
-        'h2',
-        'h3',
-        'h4',
-        'h5',
-        'h6',
-        'hr',
-        'head',
-        'header',
-        'html',
-        'i',
-        'iframe',
-        'img',
-        'input',
-        'kbd',
-        'label',
-        'li',
-        'link',
-        'meta',
-        'nav',
-        'noframes',
-        'noscript',
-        'object',
-        'ol',
-        'option',
-        'p',
-        'pre',
-        'progress',
-        'samp',
-        'script',
-        'section',
-        'select',
-        'span',
-        'strong',
-        'style',
-        'table',
-        'td',
-        'th',
-        'tr',
-        'textarea',
-        'title',
-        'tr',
-        'tbody',
-        'thead',
-        'u',
-        'ul',
-        'var',
-        ))
