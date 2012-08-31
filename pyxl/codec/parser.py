@@ -161,12 +161,27 @@ class PyxlParser(HTMLParser):
         self.collectedData += '&#%s' % name
 
     def handle_comment(self, comment):
+        self._handle_enddata()
         self._appendString('html.x_html_comment(comment="')
         self._appendString(' '.join(comment.replace('"', '\\"').split()))
         self._appendString('"),')
 
     def handle_decl(self, decl):
+        self._handle_enddata()
         self._appendString('html.x_html_decl(decl="')
+        self._appendString(' '.join(decl.replace('"', '\\"').split()))
+        self._appendString('"),')
+
+    MS_DECL_NAME_RE = re.compile('if|else|endif', re.I)
+    def unknown_decl(self, decl):
+        self._handle_enddata()
+        # bug in python 2.5 HTMLParser parse_declaration skips
+        # ]]> for regular decls and ]> for MS decls forcing us
+        # to special case them here
+        if self.MS_DECL_NAME_RE.match(decl):
+            self._appendString('html.x_html_ms_decl(decl="')
+        else:
+            self._appendString('html.x_html_marked_decl(decl="')
         self._appendString(' '.join(decl.replace('"', '\\"').split()))
         self._appendString('"),')
 

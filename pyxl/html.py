@@ -55,6 +55,22 @@ class x_html_decl(x_base):
     def to_string(self):
         return '<!%s>' % self.attr('decl')
 
+class x_html_marked_decl(x_base):
+    __attrs__ = {
+        'decl': unicode,
+        }
+
+    def to_string(self):
+        return '<![%s]]>' % self.attr('decl')
+
+class x_html_ms_decl(x_base):
+    __attrs__ = {
+        'decl': unicode,
+        }
+
+    def to_string(self):
+        return '<![%s]>' % self.attr('decl')
+
 class x_cond_comment(x_base):
     __attrs__ = {
         'cond': unicode,
