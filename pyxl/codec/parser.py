@@ -27,6 +27,13 @@ class PyxlParser(HTMLParser):
         self.col = col
         self.line = line
         self.openTags = []
+
+        # HTMLParser treats tags in this list like they only
+        # contain CDATA. Unfortunately, its regexp isn't the
+        # greatest. Also we'd rather treat them like any other
+        # tag in pyxl, so we set it to an empty tuple.
+        self.CDATA_CONTENT_ELEMENTS = ()
+
         HTMLParser.__init__(self)
 
     def feed(self, token):
