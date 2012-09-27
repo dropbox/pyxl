@@ -216,26 +216,28 @@ class PyxlParser(HTMLParser):
     TEXT_AND_CODE_RE = re.compile('((?<!\\\\){.*?(?<!\\\\)})', re.S)
     def _get_text_and_code_parts(self, data):
         parts = []
-        raw_parts = (part.strip('\n') for part in self.TEXT_AND_CODE_RE.split(data))
+        raw_parts = (part for part in self.TEXT_AND_CODE_RE.split(data.strip('\n')))
 
         for part in raw_parts:
             if not part: continue
 
             is_code = part[0] == '{'
+
+            # unescape { and }
             part = part.replace('\}', '}')
             part = part.replace('\{', '{')
 
+            # replace newlines with spaces
+            part = part.replace('\n', ' ')
+            part = part.replace('\r', ' ')
+
             if is_code:
-                part = part.replace('\n', ' ')
-                part = part.replace('\r', ' ')
+                # strip off enclosing {}
                 part = part[1:-1]
             else:
-                # escape newlines
-                part = part.replace('\n', '\\n')
-                part = part.replace('\r', '\\r')
+                # escape double quote
                 part = part.replace('"', '\\"')
 
             parts.append((part, is_code))
 
         return parts
-
