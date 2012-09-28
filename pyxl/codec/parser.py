@@ -62,6 +62,10 @@ class PyxlParser(HTMLParser):
 
         if ttype != tokenize.COMMENT:
             HTMLParser.feed(self, tvalue)
+        else:
+            # comments go directly into the output since they
+            # are not a part of the HTML
+            self._appendString(tvalue)
 
     def done(self):
         return not len(self.openTags) and not self.rawdata
