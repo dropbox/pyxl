@@ -149,8 +149,8 @@ class x_base(object):
                 value = value if isinstance(value, attr_type) else attr_type(value)
             except Exception:
                 exc_type, exc_obj, exc_tb = sys.exc_info()
-                msg = 'incorrect type for "%s" in <%s>. expected %s, got %s' % (
-                    name, self.__tag__, attr_type, type(value))
+                msg = '%s: %s: incorrect type for "%s". expected %s, got %s' % (
+                    self.__tag__, self.__class.__.__name__, name, attr_type, type(value))
                 exception = PyxlException(msg)
 
                 if exc_type == UnicodeDecodeError:
