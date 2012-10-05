@@ -150,7 +150,7 @@ class x_base(object):
             except Exception:
                 exc_type, exc_obj, exc_tb = sys.exc_info()
                 msg = '%s: %s: incorrect type for "%s". expected %s, got %s' % (
-                    self.__tag__, self.__class.__.__name__, name, attr_type, type(value))
+                    self.__tag__, self.__class__.__name__, name, attr_type, type(value))
                 exception = PyxlException(msg)
 
                 if exc_type == UnicodeDecodeError:
