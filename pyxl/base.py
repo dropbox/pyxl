@@ -46,6 +46,7 @@ class x_base(object):
         'dir': unicode,
         'id': unicode,
         'lang': unicode,
+        'maxlength': unicode,
         'style': unicode,
         'tabindex': int,
         'title': unicode,
