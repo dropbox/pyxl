@@ -118,7 +118,7 @@ class x_base(object):
                 if c.__class__.__name__ == tag_name]
 
     def append(self, child):
-        if type(child) in (list, tuple):
+        if type(child) in (list, tuple) or hasattr(child, '__iter__'):
             self.__children__.extend(c for c in child if c is not None and c is not False)
         elif child is not None and child is not False:
             self.__children__.append(child)
