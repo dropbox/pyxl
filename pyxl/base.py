@@ -136,6 +136,11 @@ class x_base(object):
             raise PyxlException('<%s> has no attr named "%s"' % (self.__tag__, name))
         return self.__attributes__.get(name, default)
 
+    def transfer_attributes(self, element):
+        for name, value in self.__attributes__.iteritems():
+            if element.allows_attribute(name) and element.attr(name) is None:
+                element.set_attr(name, value)
+
     def set_attr(self, name, value):
         # this check is fairly expensive (~8% of cost)
         if not self.allows_attribute(name):
