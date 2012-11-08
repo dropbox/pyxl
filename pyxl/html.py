@@ -331,6 +331,19 @@ class x_iframe(x_html_element):
         'width': unicode,
         }
 
+class x_video(x_html_element):
+    __attrs__ = {
+        'autoplay': unicode,
+        'controls': unicode,
+        'height': unicode,
+        'loop': unicode,
+        'muted': unicode,
+        'poster': unicode,
+        'preload': unicode,
+        'src': unicode,
+        'width': unicode,
+        }
+
 class x_img(x_html_element_nochild):
     __attrs__ = {
         'alt': unicode,
