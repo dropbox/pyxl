@@ -95,7 +95,10 @@ class PyxlParser(HTMLParser):
             self._appendString(') and html.x_frag()')
             return
 
-        x_tag = 'x_%s' % tag
+        module, dot, identifier = tag.rpartition('.')
+        identifier = 'x_%s' % identifier
+        x_tag = module + dot + identifier
+
         if hasattr(html, x_tag):
             self._appendString('html.')
         self._appendString('%s(' % x_tag)
