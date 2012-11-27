@@ -16,95 +16,94 @@ from pyxl.utils import escape
 from pyxl.base import x_base
 
 class x_html_element(x_base):
-    def to_string(self):
-        out = [u'<', self.__tag__]
+    def _to_list(self, l):
+        l.extend((u'<', self.__tag__))
         for name, value in self.__attributes__.iteritems():
-            out.extend((u' ', name, u'="', escape(value), u'"'))
-        out.append(u'>')
+            l.extend((u' ', name, u'="', escape(value), u'"'))
+        l.append(u'>')
 
         for child in self.__children__:
-            out.append(x_base.render_child(child))
+            x_base._render_child_to_list(child, l)
 
-        out.extend((u'</', self.__tag__, u'>'))
-        return u''.join(out)
+        l.extend((u'</', self.__tag__, u'>'))
 
 class x_html_element_nochild(x_base):
     def append(self, child):
         raise Exception('<%s> does not allow children.', self.__tag__)
 
-    def to_string(self):
-        out = [u'<', self.__tag__]
+    def _to_list(self, l):
+        l.extend((u'<', self.__tag__))
         for name, value in self.__attributes__.iteritems():
-            out.extend((u' ', name, u'="', escape(value), u'"'))
-        out.append(u' />')
-        return u''.join(out)
+            l.extend((u' ', name, u'="', escape(value), u'"'))
+        l.append(u' />')
 
 class x_html_comment(x_base):
     __attrs__ = {
         'comment': unicode,
         }
 
-    def to_string(self):
-        return u''
+    def _to_list(self, l):
+        pass
 
 class x_html_decl(x_base):
     __attrs__ = {
         'decl': unicode,
         }
 
-    def to_string(self):
-        return '<!%s>' % self.attr('decl')
+    def _to_list(self, l):
+        l.extend((u'<!', self.attr('decl'), u'>'))
 
 class x_html_marked_decl(x_base):
     __attrs__ = {
         'decl': unicode,
         }
 
-    def to_string(self):
-        return '<![%s]]>' % self.attr('decl')
+    def _to_list(self, l):
+        l.extend((u'<![', self.attr('decl'), u']]>'))
 
 class x_html_ms_decl(x_base):
     __attrs__ = {
         'decl': unicode,
         }
 
-    def to_string(self):
-        return '<![%s]>' % self.attr('decl')
+    def _to_list(self, l):
+        l.extend((u'<![', self.attr('decl'), u']>'))
 
 class x_cond_comment(x_base):
     __attrs__ = {
         'cond': unicode,
         }
 
-    def to_string(self):
+    def _to_list(self, l):
         # allow '&', escape everything else from cond
         cond = self.__attributes__.get('cond', '')
         cond = '&'.join(map(escape, cond.split('&')))
 
-        out = [u'<!--[if %s]>' % cond]
+        l.extend((u'<!--[if ', cond, u']>'))
 
         for child in self.__children__:
-            out.append(x_base.render_child(child))
+            x_base._render_child_to_list(child, l)
 
-        out.append(u'<![endif]-->')
-        return u''.join(out)
+        l.append(u'<![endif]-->')
 
 class x_rawhtml(x_html_element_nochild):
     __attrs__= {
         'text': unicode,
         }
 
-    def to_string(self):
+    def _to_list(self, l):
         if not isinstance(self.text, unicode):
-            return unicode(self.text, 'utf8')
-        return self.text
+            l.append(unicode(self.text, 'utf8'))
+        else:
+            l.append(self.text)
 
 def rawhtml(text):
     return x_rawhtml(text=text)
 
 class x_frag(x_base):
-    def to_string(self):
-        return u''.join(self.render_child(c) for c in self.__children__)
+    def _to_list(self, l):
+        for child in self.__children__:
+            self._render_child_to_list(child, l)
 
 class x_a(x_html_element):
     __attrs__ = {

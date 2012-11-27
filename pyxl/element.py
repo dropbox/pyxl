@@ -30,8 +30,8 @@ class x_element(x_base):
 
         return out
 
-    def to_string(self):
-        return self.render_child(self.get_base_element())
+    def _to_list(self, l):
+        self._render_child_to_list(self.get_base_element(), l)
 
     def rendered_element(self):
         if not hasattr(self, 'element'):

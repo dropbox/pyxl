@@ -200,6 +200,11 @@ class x_base(object):
         return (name in self.__attrs__ or name.startswith('data-') or name.startswith('aria-'))
 
     def to_string(self):
+        l = []
+        self._to_list(l)
+        return u''.join(l)
+
+    def _to_list(self, l):
         raise NotImplementedError()
 
     def __str__(self):
@@ -209,10 +214,9 @@ class x_base(object):
         return self.to_string()
 
     @staticmethod
-    def render_child(child):
-        if isinstance(child, x_base): return child.to_string()
-        if child is None: return u''
-        return escape(child)
+    def _render_child_to_list(child, l):
+        if isinstance(child, x_base): child._to_list(l)
+        elif child is not None: l.append(escape(child))
 
     @staticmethod
     def _fix_attribute_name(name):
