@@ -642,3 +642,8 @@ class x_ul(x_html_element):
 
 class x_var(x_html_element):
     pass
+
+class x_audio(x_html_element):
+    __attrs__ = {
+        'src': unicode
+        }
