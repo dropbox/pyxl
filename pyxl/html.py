@@ -255,6 +255,7 @@ class x_form(x_html_element):
         'method': unicode,
         'name': unicode,
         'target': unicode,
+        'novalidate': unicode,
         }
 
 class x_frame(x_html_element_nochild):
