@@ -96,26 +96,27 @@ class x_base(object):
             self.set_attr('id', eid)
         return eid
 
-    def children(self, selector=None):
+    def children(self, selector=None, exclude=False):
         if not selector:
             return self.__children__
 
         # filter by class
         if selector[0] == '.':
-            class_name = selector[1:]
-            return [c for c in self.__children__
-                    if class_name in c.get_class()]
+            select = lambda x: selector[1:] in x.get_class() 
 
         # filter by id
         if selector[0] == '#':
-            id_name = selector[1:]
-            return [c for c in self.__children__
-                    if c.get_id() == id_name]
+            select = lambda x: selector[1:] == x.get_id()
 
         # filter by tag name
-        tag_name = 'x_%s' % selector
-        return [c for c in self.__children__
-                if c.__class__.__name__ == tag_name]
+        select = lambda x: x.__class__.__name__ == ('x_%s' % selector)
+
+        if exclude:
+            func = lambda x: not select(x)
+        else:
+            func = select
+
+        return filter(func, self.__children__)
 
     def append(self, child):
         if type(child) in (list, tuple) or hasattr(child, '__iter__'):
