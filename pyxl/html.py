@@ -138,6 +138,11 @@ class x_article(x_html_element):
 class x_aside(x_html_element):
     pass
 
+class x_audio(x_html_element):
+    __attrs__ = {
+        'src': unicode
+        }
+        
 class x_b(x_html_element):
    pass
 
@@ -592,6 +597,7 @@ class x_textarea(x_html_element):
         'autocomplete': unicode,
         'autocapitalize': unicode,
         'spellcheck': unicode,
+        'autofocus': unicode,
         }
 
 class x_tfoot(x_html_element):
@@ -623,6 +629,11 @@ class x_thead(x_html_element):
         'valign': unicode,
         }
 
+class x_time(x_html_element):
+    __attrs__ = {
+        'datetime': unicode,
+        }
+
 class x_title(x_html_element):
    pass
 
@@ -645,8 +656,3 @@ class x_ul(x_html_element):
 
 class x_var(x_html_element):
     pass
-
-class x_audio(x_html_element):
-    __attrs__ = {
-        'src': unicode
-        }
