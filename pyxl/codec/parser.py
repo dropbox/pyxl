@@ -121,9 +121,7 @@ class PyxlParser(HTMLParser):
             if is_code:
                 self._appendString(part)
             else:
-                self._appendString('u"')
-                self._appendString(part)
-                self._appendString('"')
+                self._appendString(repr(part))
         else:
             self._appendString('u"".join((')
             for part, is_code in text_and_code_parts:
@@ -132,9 +130,7 @@ class PyxlParser(HTMLParser):
                     self._appendString(part)
                     self._appendString(')')
                 else:
-                    self._appendString('u"')
-                    self._appendString(part)
-                    self._appendString('"')
+                    self._appendString(repr(part))
                 self._appendString(', ')
             self._appendString('))')
 
