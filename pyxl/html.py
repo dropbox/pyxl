@@ -388,6 +388,7 @@ class x_input(x_html_element_nochild):
         'autocorrect': unicode,
         'required': unicode,
         'spellcheck': unicode,
+        'multiple': unicode,
         }
 
 class x_ins(x_html_element):
