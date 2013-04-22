@@ -25,7 +25,7 @@ def pyxl_transform(stream):
         print ex
         raise
 
-    return output.strip()
+    return output.rstrip()
 
 def pyxl_transform_string(text):
     stream = cStringIO.StringIO(text)
