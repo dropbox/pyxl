@@ -35,6 +35,13 @@ To confirm that Pyxl was correctly installed, run the following command from the
 
 You should see the string `<html><body>Hello World!</body></html>` printed out. Thats it! You're ready to use Pyxl.
 
+## Running the tests
+
+After installing pyxl:
+
+    easy_install unittest2
+    python pyxl_tests.py
+
 ## How it works
 
 Pyxl converts HTML tags into python objects before the file is run through the interpreter, so the code that actually runs is regular python. For example, the `Hello World` example above is converted into:
