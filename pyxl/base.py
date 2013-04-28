@@ -159,17 +159,7 @@ class x_base(object):
                 msg = '%s: %s: incorrect type for "%s". expected %s, got %s' % (
                     self.__tag__, self.__class__.__name__, name, attr_type, type(value))
                 exception = PyxlException(msg)
-
-                if exc_type == UnicodeDecodeError:
-                    from metaserver.common import exclog2_util
-                    from metaserver.common.util import raise_and_report
-
-                    # special casing unicode errors till we've fixed them all in our logs
-                    value = unicode(value, 'utf8')
-                    severity = exclog2_util.SeverityType.CRITICAL
-                    raise_and_report(exception, severity2=severity, exc_tb=exc_tb)
-                else:
-                    raise exception, None, exc_tb
+                raise exception, None, exc_tb
 
             self.__attributes__[name] = value
 
