@@ -14,7 +14,7 @@
 
 import sys
 import random
-from pyxl.utils import escape, rawhtml
+from pyxl.utils import *
 
 class x_base_metaclass(type):
     def __init__(self, name, parents, attrs):
