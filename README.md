@@ -79,7 +79,7 @@ Pyxl converts tags into python objects in the background, which inherit from a c
 
     items = ['Puppies', 'Dragons']
     nav = <ul />
-    for path, text in items:
+    for text in items:
         nav.append(<li>{text}</li>)
 
 Another useful function is `children()`, which returns a list of all the child nodes for an element. `children()` accepts an optional selector string as an argument to filter the children. Currently, there is only support for filtering the children by a class (format: ".class_name"), id (format: "#id_string") or tag name. Here is a snippet which adds all `input` elements from an existing form to a new form:
