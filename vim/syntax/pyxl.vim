@@ -306,9 +306,9 @@ syn region  htmlString   contained start=+"+ end=+"+ contains=htmlSpecialChar,ja
 syn region  htmlString   contained start=+'+ end=+'+ contains=htmlSpecialChar,javaScriptExpression,@htmlPreproc
 syn match   htmlValue    contained "=[\t ]*[^'" \t>][^ \t>]*"hs=s+1   contains=javaScriptExpression,@htmlPreproc
 syn region  htmlEndTag             start=+</+      end=+>+ contains=htmlTagN,htmlTagError
-syn region  htmlTag                start=+<[^/< \t]+   end=+>+ contains=htmlTagN,htmlString,htmlArg,htmlValue,htmlTagError,htmlEvent,htmlCssDefinition,@htmlPreproc,@htmlArgCluster
-syn match   htmlTagN     contained +<\s*[-a-zA-Z0-9]\++hs=s+1 contains=htmlTagName,htmlSpecialTagName,@htmlTagNameCluster
-syn match   htmlTagN     contained +</\s*[-a-zA-Z0-9]\++hs=s+2 contains=htmlTagName,htmlSpecialTagName,@htmlTagNameCluster
+syn region  htmlTag                start=+<[^/<= \t]+   end=+>+ contains=htmlTagN,htmlString,htmlArg,htmlValue,htmlTagError,htmlEvent,htmlCssDefinition,@htmlPreproc,@htmlArgCluster
+syn match   htmlTagN     contained +<\s*[-a-zA-Z0-9_]\++hs=s+1 contains=htmlTagName,htmlSpecialTagName,@htmlTagNameCluster
+syn match   htmlTagN     contained +</\s*[-a-zA-Z0-9_]\++hs=s+2 contains=htmlTagName,htmlSpecialTagName,@htmlTagNameCluster
 "syn match   htmlTagError contained "[^>]<"ms=s+1
 
 
@@ -316,7 +316,7 @@ syn match   htmlTagN     contained +</\s*[-a-zA-Z0-9]\++hs=s+2 contains=htmlTagN
 syn keyword htmlTagName contained address applet area a base basefont
 syn keyword htmlTagName contained big blockquote br caption center
 syn keyword htmlTagName contained cite code dd dfn dir div dl dt font
-syn keyword htmlTagName contained form hr html img
+syn keyword htmlTagName contained form frag hr html if img
 syn keyword htmlTagName contained input isindex kbd li link map menu
 syn keyword htmlTagName contained meta ol option param pre p samp span
 syn keyword htmlTagName contained select small strike sub sup
