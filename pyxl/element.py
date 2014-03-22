@@ -11,17 +11,18 @@ class x_element(x_base):
         out = self._rendered_element()
         # Note: get_class() may return multiple space-separated classes.
         cls = self.get_class()
-        classes = [cls] if cls else []
+        classes = set(cls.split(' ')) if cls else set()
 
         while isinstance(out, x_element):
             new_out = out._rendered_element()
             cls = out.get_class()
             if cls:
-                classes.append(cls)
+                classes.update(cls.split(' '))
             out = new_out
 
         if classes and isinstance(out, x_base):
-            out.add_class(' '.join(classes))
+            classes.update(out.get_class().split(' '))
+            out.set_attr('class', ' '.join(filter(None, classes)))
 
         return out
 
