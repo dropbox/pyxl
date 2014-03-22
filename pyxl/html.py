@@ -425,7 +425,8 @@ class x_meta(x_html_element_nochild):
         'http-equiv': unicode,
         'name': unicode,
         'property': unicode,
-        "scheme": unicode,
+        'scheme': unicode,
+        'charset': unicode,
         }
 
 class x_nav(x_html_element):
