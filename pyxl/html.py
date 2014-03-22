@@ -441,6 +441,13 @@ class x_link(x_html_element_nochild):
         'type': unicode,
         }
 
+class x_main(x_html_element):
+    # we are not enforcing the w3 spec of one and only one main element on the
+    # page
+    __attrs__ = {
+        'role': unicode,
+    }
+
 class x_map(x_html_element):
     __attrs__ = {
         'name': unicode,
