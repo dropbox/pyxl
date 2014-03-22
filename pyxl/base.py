@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
+import numpy
 import sys
-from Crypto.Random import random
+
 from pyxl.utils import escape
 
 class PyxlException(Exception):
@@ -80,7 +81,8 @@ class x_base(object):
     def get_id(self):
         eid = self.attr('id')
         if not eid:
-            eid = 'pyxl%d' % random.randint(0, sys.maxint)
+            # Use numpy to generate random numbers quickly.  These don't need to be secure random.
+            eid = 'pyxl%d' % numpy.random.random_integers(0, sys.maxint - 1)
             self.set_attr('id', eid)
         return eid
 
