@@ -325,6 +325,7 @@ class x_iframe(x_html_element):
         'width': unicode,
         # rk: 'allowTransparency' is not in W3C's HTML spec, but it's supported in most modern browsers.
         'allowtransparency': unicode,
+        'allowfullscreen': unicode,
         }
 
 class x_video(x_html_element):
