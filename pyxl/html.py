@@ -3,6 +3,18 @@
 from pyxl.utils import escape
 from pyxl.base import x_base
 
+_if_condition_stack = []
+_last_if_condition = None
+
+def _push_condition(cond):
+    _if_condition_stack.append(cond)
+    return cond
+
+def _leave_if():
+    global _last_if_condition
+    _last_if_condition = _if_condition_stack.pop()
+    return []
+
 class x_html_element(x_base):
     def _to_list(self, l):
         l.extend((u'<', self.__tag__))
@@ -303,7 +315,7 @@ class x_head(x_html_element):
         }
 
 class x_header(x_html_element):
-	pass
+    pass
 
 class x_hr(x_html_element_nochild):
     pass
@@ -521,7 +533,7 @@ class x_script(x_html_element):
         }
 
 class x_section(x_html_element):
-	pass
+    pass
 
 class x_select(x_html_element):
     __attrs__ = {
