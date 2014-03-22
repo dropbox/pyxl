@@ -3,6 +3,7 @@ from __future__ import with_statement
 
 import codecs, cStringIO, encodings
 import sys
+import traceback
 from encodings import utf_8
 from pyxl.codec.tokenizer import pyxl_tokenize, pyxl_untokenize
 
@@ -11,6 +12,7 @@ def pyxl_transform(stream):
         output = pyxl_untokenize(pyxl_tokenize(stream.readline))
     except Exception, ex:
         print ex
+        traceback.print_exc()
         raise
 
     return output.rstrip()
