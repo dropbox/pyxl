@@ -40,5 +40,10 @@ class PyxlTests(unittest2.TestCase):
             <script><![CDATA[<div><div>]]></script>.to_string(),
             '<script><![CDATA[<div><div>]]></script>')
 
+    def test_form_error(self):
+        self.assertEqual(
+            <form_error name="foo" />.to_string(),
+            '<form:error name="foo" />')
+
 if __name__ == '__main__':
     unittest2.main()

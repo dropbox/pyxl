@@ -253,6 +253,14 @@ class x_form(x_html_element):
         'target': unicode,
         }
 
+class x_form_error(x_base):
+    __attrs__ = {
+        'name': unicode
+        }
+
+    def _to_list(self, l):
+        l.extend((u'<form:error name="', self.attr('name'), u'" />'))
+
 class x_frame(x_html_element_nochild):
     __attrs__ = {
         'frameborder': unicode,
