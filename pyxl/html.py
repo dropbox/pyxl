@@ -347,6 +347,7 @@ class x_iframe(x_html_element):
         'marginheight': unicode,
         'marginwidth': unicode,
         'name': unicode,
+        'sandbox': unicode,
         'scrolling': unicode,
         'src': unicode,
         'width': unicode,
