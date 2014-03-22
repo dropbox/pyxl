@@ -1,6 +1,7 @@
 # coding: pyxl
 import unittest2
 from pyxl import html
+from pyxl.base import PyxlException, x_base
 
 class PyxlTests(unittest2.TestCase):
 
@@ -44,6 +45,46 @@ class PyxlTests(unittest2.TestCase):
         self.assertEqual(
             <form_error name="foo" />.to_string(),
             '<form:error name="foo" />')
+
+    def test_enum_attrs(self):
+        class x_foo(x_base):
+            __attrs__ = {
+                'value': ['a', 'b'],
+            }
+
+            def _to_list(self, l):
+                pass
+
+        self.assertEqual(<foo />.attr('value'), 'a')
+        self.assertEqual(<foo />.value, 'a')
+        self.assertEqual(<foo value="b" />.attr('value'), 'b')
+        self.assertEqual(<foo value="b" />.value, 'b')
+        with self.assertRaises(PyxlException):
+            <foo value="c" />
+
+        class x_bar(x_base):
+            __attrs__ = {
+                'value': ['a', None, 'b'],
+            }
+
+            def _to_list(self, l):
+                pass
+
+        with self.assertRaises(PyxlException):
+            <bar />.attr('value')
+
+        with self.assertRaises(PyxlException):
+            <bar />.value
+
+        class x_baz(x_base):
+            __attrs__ = {
+                'value': [None, 'a', 'b'],
+            }
+
+            def _to_list(self, l):
+                pass
+
+        self.assertEqual(<baz />.value, None)
 
 if __name__ == '__main__':
     unittest2.main()

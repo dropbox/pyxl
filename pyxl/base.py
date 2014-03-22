@@ -125,7 +125,23 @@ class x_base(object):
         # this check is fairly expensive (~8% of cost)
         if not self.allows_attribute(name):
             raise PyxlException('<%s> has no attr named "%s"' % (self.__tag__, name))
-        return self.__attributes__.get(name, default)
+
+        value = self.__attributes__.get(name)
+
+        if value is not None:
+            return value
+
+        attr_type = self.__attrs__.get(name, unicode)
+        if type(attr_type) == list:
+            if not attr_type:
+                raise PyxlException('Invalid attribute definition')
+
+            if None in attr_type[1:]:
+                raise PyxlException('None must be the first, default value')
+
+            return attr_type[0]
+
+        return default
 
     def transfer_attributes(self, element):
         for name, value in self.__attributes__.iteritems():
@@ -138,18 +154,28 @@ class x_base(object):
             raise PyxlException('<%s> has no attr named "%s"' % (self.__tag__, name))
 
         if value is not None:
-
             attr_type = self.__attrs__.get(name, unicode)
 
-            try:
-                # Validate type of attr and cast to correct type if possible
-                value = value if isinstance(value, attr_type) else attr_type(value)
-            except Exception:
-                exc_type, exc_obj, exc_tb = sys.exc_info()
-                msg = '%s: %s: incorrect type for "%s". expected %s, got %s' % (
-                    self.__tag__, self.__class__.__name__, name, attr_type, type(value))
-                exception = PyxlException(msg)
-                raise exception, None, exc_tb
+            if type(attr_type) == list:
+                # support for enum values in pyxl attributes
+                values_enum = attr_type
+                assert values_enum, 'Invalid attribute definition'
+
+                if value not in values_enum:
+                    msg = '%s: %s: incorrect value "%s" for "%s". Expecting enum value %s' % (
+                        self.__tag__, self.__class__.__name__, value, name, values_enum)
+                    raise PyxlException(msg)
+
+            else:
+                try:
+                    # Validate type of attr and cast to correct type if possible
+                    value = value if isinstance(value, attr_type) else attr_type(value)
+                except Exception:
+                    exc_type, exc_obj, exc_tb = sys.exc_info()
+                    msg = '%s: %s: incorrect type for "%s". expected %s, got %s' % (
+                        self.__tag__, self.__class__.__name__, name, attr_type, type(value))
+                    exception = PyxlException(msg)
+                    raise exception, None, exc_tb
 
             self.__attributes__[name] = value
 
