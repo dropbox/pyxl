@@ -246,6 +246,12 @@ class x_embed(x_html_element):
         'type': unicode,
         }
 
+class x_figure(x_html_element):
+   pass
+
+class x_figcaption(x_html_element):
+   pass
+
 class x_fieldset(x_html_element):
    pass
 
