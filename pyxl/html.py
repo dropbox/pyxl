@@ -245,11 +245,12 @@ class x_form(x_html_element):
         'action': unicode,
         'accept': unicode,
         'accept-charset': unicode,
+        'autocomplete': unicode,
         'enctype': unicode,
         'method': unicode,
         'name': unicode,
-        'target': unicode,
         'novalidate': unicode,
+        'target': unicode,
         }
 
 class x_frame(x_html_element_nochild):
