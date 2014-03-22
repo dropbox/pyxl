@@ -589,6 +589,7 @@ class x_textarea(x_html_element):
         'autocapitalize': unicode,
         'spellcheck': unicode,
         'autofocus': unicode,
+        'required': unicode,
         }
 
 class x_tfoot(x_html_element):
