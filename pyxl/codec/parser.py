@@ -10,7 +10,11 @@ from html_tokenizer import (
 from pytokenize import Untokenizer
 
 class ParseError(Exception):
-    pass
+    def __init__(self, message, pos=None):
+        if pos is not None:
+            super(ParseError, self).__init__("%s at line %d char %d" % ((message,) + pos))
+        else:
+            super(ParseError, self).__init__(message)
 
 class PyxlParser(HTMLTokenizer):
     def __init__(self, row, col):
@@ -46,7 +50,7 @@ class PyxlParser(HTMLTokenizer):
                 try:
                     super(PyxlParser, self).feed(c)
                 except TokenizerParseError:
-                    raise ParseError("HTML Parsing error, line %d char %d" % self.end)
+                    raise ParseError("HTML Parsing error", self.end)
         if self.done():
             self.remainder = (ttype, tvalue, self.end, tend, tline)
         else:
@@ -179,9 +183,9 @@ class PyxlParser(HTMLTokenizer):
         self.open_tags.append({'tag':tag, 'row': self.end[0]})
         if tag == 'if':
             if len(attrs) != 1:
-                raise ParseError("if tag only takes one attr called 'cond'")
+                raise ParseError("if tag only takes one attr called 'cond'", self.end)
             if 'cond' not in attrs:
-                raise ParseError("if tag must contain the 'cond' attr")
+                raise ParseError("if tag must contain the 'cond' attr", self.end)
 
             self.output.append('html._push_condition(bool(')
             self._handle_attr_value(attrs['cond'])
@@ -191,9 +195,9 @@ class PyxlParser(HTMLTokenizer):
             return
         elif tag == 'else':
             if len(attrs) != 0:
-                raise ParseError("else tag takes no attrs")
+                raise ParseError("else tag takes no attrs", self.end)
             if not self.last_thing_was_close_if_tag:
-                raise ParseError("<else> tag must come right after </if>")
+                raise ParseError("<else> tag must come right after </if>", self.end)
 
             self.output.append('(not html._last_if_condition) and html.x_frag()(')
             self.last_thing_was_python = False

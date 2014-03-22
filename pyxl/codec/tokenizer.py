@@ -105,8 +105,7 @@ def pyxl_untokenize(tokens):
         ttype, tvalue, tstart, tend, tline = token
         row, col = tstart
 
-        if row > prev_row:
-            raise PyxlParseError('Unexpected jump in rows (line:%d: %s' % (row, tline))
+        assert row == prev_row, 'Unexpected jump in rows on line:%d: %s' % (row, tline)
 
         # Add whitespace
         col_offset = col - prev_col
