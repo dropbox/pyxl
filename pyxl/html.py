@@ -100,6 +100,7 @@ class x_a(x_html_element):
         'type': unicode,
         'name': unicode,
         'target': unicode,
+        'download': unicode,
         }
 
 class x_abbr(x_html_element):
@@ -130,7 +131,7 @@ class x_audio(x_html_element):
     __attrs__ = {
         'src': unicode
         }
-        
+
 class x_b(x_html_element):
    pass
 
