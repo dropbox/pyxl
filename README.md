@@ -189,3 +189,7 @@ Grab pyxl-mode.el from the downloaded package under `pyxl/emacs/pyxl-mode.el` or
     (autoload 'pyxl-mode "pyxl-mode" "Major mode for editing pyxl" t)
     (setq auto-mode-alist
          (cons '("\\.py\\'" . pyxl-mode) auto-mode-alist))
+
+### Vim
+
+Pyxl detection, syntax, and indent files are in the `vim` directory. The easiest way to install the vim support is via [pathogen](https://github.com/tpope/vim-pathogen); with pathogen, you can simply link or copy the directory into your bundle directory. Without pathogen, place the various files in the corresponding subdirectories of your .vim directory.
