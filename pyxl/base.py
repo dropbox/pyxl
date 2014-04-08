@@ -96,11 +96,12 @@ class x_base(object):
             select = lambda x: selector[1:] in x.get_class() 
 
         # filter by id
-        if selector[0] == '#':
+        elif selector[0] == '#':
             select = lambda x: selector[1:] == x.get_id()
 
         # filter by tag name
-        select = lambda x: x.__class__.__name__ == ('x_%s' % selector)
+        else:
+            select = lambda x: x.__class__.__name__ == ('x_%s' % selector)
 
         if exclude:
             func = lambda x: not select(x)
