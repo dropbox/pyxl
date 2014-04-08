@@ -36,6 +36,7 @@ class x_base(object):
         'id': unicode,
         'lang': unicode,
         'maxlength': unicode,
+        'role': unicode,
         'style': unicode,
         'tabindex': int,
         'title': unicode,
