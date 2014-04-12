@@ -28,17 +28,17 @@ This meant no longer dealing with a separate "templating" language, and a lot mo
 Download [pyxl-1.0.tar.gz](https://github.com/downloads/awable/pyxl/pyxl-1.0.tar.gz) and run the following commands from the directory you downloaded to.
 
 ```sh
-$ tar xvzf pyxl-1.0.tar.gz
-$ cd pyxl-1.0
-$ python setup.py build
-$ sudo python setup.py install
-$ sudo python finish_install.py
+tar xvzf pyxl-1.0.tar.gz
+cd pyxl-1.0
+python setup.py build
+sudo python setup.py install
+sudo python finish_install.py
 ```
 
 To confirm that Pyxl was correctly installed, run the following command from the same directory:
 
 ```sh
-$ python pyxl/examples/hello_world.py
+python pyxl/examples/hello_world.py
 ```
 
 You should see the string `<html><body>Hello World!</body></html>` printed out. Thats it! You're ready to use Pyxl.
@@ -48,8 +48,8 @@ You should see the string `<html><body>Hello World!</body></html>` printed out. 
 After installing pyxl:
 
 ```sh
-$ easy_install unittest2
-$ python pyxl_tests.py
+easy_install unittest2
+python pyxl_tests.py
 ```
 
 ## How it works
