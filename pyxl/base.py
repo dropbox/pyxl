@@ -1,9 +1,16 @@
 #!/usr/bin/env python
 
-import numpy
 import sys
 
 from pyxl.utils import escape
+
+# We need a way to ensure that on a given page, no two pyxl elements are given the
+# same 'pyxl<num>' id. Using a random number generator works reasonably well, but
+# introduces extra complexity and overhead that is unnecessary. A global variable
+# counter works just as well and is much faster. Since we only care about collisions
+# in a single page, we don't have to worry about two different instances having the
+# same counters.
+pyxl_id_counter = 0
 
 class PyxlException(Exception):
     pass
@@ -82,8 +89,10 @@ class x_base(object):
     def get_id(self):
         eid = self.attr('id')
         if not eid:
-            # Use numpy to generate random numbers quickly.  These don't need to be secure random.
-            eid = 'pyxl%d' % numpy.random.random_integers(0, sys.maxint - 1)
+            # See comment at definition of pyxl_id_counter for more details.
+            global pyxl_id_counter
+            eid = 'pyxl%d' % pyxl_id_counter
+            pyxl_id_counter = (pyxl_id_counter + 1) % sys.maxint
             self.set_attr('id', eid)
         return eid
 
