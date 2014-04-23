@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 
-import numpy
+# We want a way to generate non-colliding 'pyxl<num>' ids for elements, so we're
+# using a non-cryptographically secure random number generator. We want it to be
+# insecure because these aren't being used for anything cryptographic and it's
+# much faster (2x). We're also not using NumPy (which is even faster) because
+# it's a difficult dependency to fulfill purely to generate random numbers.
+import random
 import sys
 
 from pyxl.utils import escape
@@ -82,8 +87,7 @@ class x_base(object):
     def get_id(self):
         eid = self.attr('id')
         if not eid:
-            # Use numpy to generate random numbers quickly.  These don't need to be secure random.
-            eid = 'pyxl%d' % numpy.random.random_integers(0, sys.maxint - 1)
+            eid = 'pyxl%d' % random.randint(0, sys.maxint)
             self.set_attr('id', eid)
         return eid
 
