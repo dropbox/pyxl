@@ -1,16 +1,14 @@
 #!/usr/bin/env python
 
+# We want a way to generate non-colliding 'pyxl<num>' ids for elements, so we're
+# using a non-cryptographically secure random number generator. We want it to be
+# insecure because these aren't being used for anything cryptographic and it's
+# much faster (2x). We're also not using NumPy (which is even faster) because
+# it's a difficult dependency to fulfill purely to generate random numbers.
+import random
 import sys
 
 from pyxl.utils import escape
-
-# We need a way to ensure that on a given page, no two pyxl elements are given the
-# same 'pyxl<num>' id. Using a random number generator works reasonably well, but
-# introduces extra complexity and overhead that is unnecessary. A global variable
-# counter works just as well and is much faster. Since we only care about collisions
-# in a single page, we don't have to worry about two different instances having the
-# same counters.
-pyxl_id_counter = 0
 
 class PyxlException(Exception):
     pass
@@ -89,10 +87,7 @@ class x_base(object):
     def get_id(self):
         eid = self.attr('id')
         if not eid:
-            # See comment at definition of pyxl_id_counter for more details.
-            global pyxl_id_counter
-            eid = 'pyxl%d' % pyxl_id_counter
-            pyxl_id_counter = (pyxl_id_counter + 1) % sys.maxint
+            eid = 'pyxl%d' % random.randint(0, sys.maxint)
             self.set_attr('id', eid)
         return eid
 
