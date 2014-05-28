@@ -3,6 +3,9 @@
 from pyxl.utils import escape
 from pyxl.base import x_base
 
+# for backwards compatibility.
+from pyxl.browser_hacks import x_cond_comment
+
 _if_condition_stack = []
 _last_if_condition = None
 
@@ -68,23 +71,6 @@ class x_html_ms_decl(x_base):
 
     def _to_list(self, l):
         l.extend((u'<![', self.attr('decl'), u']>'))
-
-class x_cond_comment(x_base):
-    __attrs__ = {
-        'cond': unicode,
-        }
-
-    def _to_list(self, l):
-        # allow '&', escape everything else from cond
-        cond = self.__attributes__.get('cond', '')
-        cond = '&'.join(map(escape, cond.split('&')))
-
-        l.extend((u'<!--[if ', cond, u']>'))
-
-        for child in self.__children__:
-            x_base._render_child_to_list(child, l)
-
-        l.append(u'<![endif]-->')
 
 class x_rawhtml(x_html_element_nochild):
     __attrs__= {
