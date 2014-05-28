@@ -437,6 +437,7 @@ class x_link(x_html_element_nochild):
         'media': unicode,
         'rel': unicode,
         'rev': unicode,
+        'sizes': unicode,
         'target': unicode,
         'type': unicode,
         }
