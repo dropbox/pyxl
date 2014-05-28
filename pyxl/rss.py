@@ -25,8 +25,15 @@ class x_rss_decl_standalone(x_base):
 
 class x_rss(x_rss_element):
     __attrs__ = {
-        'version':unicode
+        'version':unicode,
+        'uses-dublin-core':bool
     }
+
+    def _handle_attribute(self, name, value):
+        if name == 'uses-dublin-core' and value:
+            return ('xmlns:dc', 'http://purl.org/dc/elements/1.1/')
+        else:
+            return (name, value)
 
 class x_channel(x_rss_element):
     pass
@@ -76,3 +83,10 @@ class x_guid(x_rss_element):
             return ('isPermaLink', 'true' if value else 'false')
         else:
             return (name, value)
+
+class x_creator(x_rss_element):
+    def _to_list(self, l):
+        l.append(u'<dc:creator>')
+        for child in self.__children__:
+            x_base._render_child_to_list(child, l)
+        l.append(u'</dc:creator>')
