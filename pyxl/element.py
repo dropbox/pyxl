@@ -31,8 +31,24 @@ class x_element(x_base):
 
     def _rendered_element(self):
         if self._element is None:
+            self.prerender()
             self._element = self.render()
+            self.postrender(self._element)
         return self._element
 
     def render(self):
         raise NotImplementedError()
+
+    def prerender(self):
+        """
+        Hook to do things before the element is rendered.  Default behavior is
+        to do nothing.
+        """
+        pass
+
+    def postrender(self, element):
+        """
+        Hook to do things after the element is rendered.  Default behavior
+        is to do nothing
+        """
+        pass
