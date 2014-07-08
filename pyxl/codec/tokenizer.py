@@ -63,7 +63,7 @@ class RewindableTokenStream(object):
 
     def _adjust_position(self, pos):
         row, col = pos
-        if row == 0:
+        if row == 1:  # rows are 1-indexed
             col += self.zero_col
         row += self.zero_row
         return (row, col)
@@ -73,7 +73,7 @@ class RewindableTokenStream(object):
         the end of such token); then restart tokenization."""
         ttype, tvalue, (row, col), tend, tline = rewind_token
         tokens = [rewind_token] + self._flush()
-        self.zero_row, self.zero_col = (row - 1, col - 1)
+        self.zero_row, self.zero_col = (row - 1, col)  # rows are 1-indexed, cols are 0-indexed
         self.rewound_buffer = StringIO(Untokenizer().untokenize(tokens))
         self.unshift_buffer = []
         self._tokens = tokenize.generate_tokens(self._readline)
@@ -109,6 +109,7 @@ def pyxl_untokenize(tokens):
 
         # Add whitespace
         col_offset = col - prev_col
+        assert col_offset >= 0
         if col_offset > 0:
             parts.append(" " * col_offset)
 
