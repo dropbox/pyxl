@@ -227,3 +227,7 @@ Pyxl detection, syntax, and indent files are in the `vim` directory. The easiest
 ### Pycharm
 
 See [pycharm-pyxl](https://github.com/christoffer/pycharm-pyxl).
+
+### Sublime Text
+
+See [sublime-pyxl](https://github.com/yyjhao/sublime-pyxl).
