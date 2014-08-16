@@ -47,6 +47,13 @@ class x_base(object):
         'title': unicode,
         'xml:lang': unicode,
 
+        # Microdata HTML attributes
+        'itemtype': unicode,
+        'itemscope': unicode,
+        'itemprop': unicode,
+        'itemid': unicode,
+        'itemref': unicode,
+
         # JS attributes
         'onabort': unicode,
         'onblur': unicode,
