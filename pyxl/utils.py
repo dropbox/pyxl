@@ -12,7 +12,7 @@ unescape_other = {
     }
 
 def escape(obj):
-    return xml_escape(unicode(obj), escape_other)
+    return xml_escape(str(obj), escape_other)
 
 def unescape(obj):
-    return xml_unescape(unicode(obj), unescape_other)
+    return xml_unescape(str(obj), unescape_other)

@@ -22,7 +22,7 @@ class x_element(x_base):
 
         if classes and isinstance(out, x_base):
             classes.update(out.get_class().split(' '))
-            out.set_attr('class', ' '.join(filter(None, classes)))
+            out.set_attr('class', ' '.join([_f for _f in classes if _f]))
 
         return out
 

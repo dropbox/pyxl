@@ -5,16 +5,16 @@ from pyxl.base import x_base
 
 class x_rss_element(x_base):
     def _to_list(self, l):
-        l.extend((u'<', self.__tag__))
-        for name, value in self.__attributes__.iteritems():
+        l.extend(('<', self.__tag__))
+        for name, value in self.__attributes__.items():
             name, value = self._handle_attribute(name, value)
-            l.extend((u' ', name, u'="', escape(value), u'"'))
-        l.append(u'>')
+            l.extend((' ', name, '="', escape(value), '"'))
+        l.append('>')
 
         for child in self.__children__:
             x_base._render_child_to_list(child, l)
 
-        l.extend((u'</', self.__tag__, u'>'))
+        l.extend(('</', self.__tag__, '>'))
 
     def _handle_attribute(self, name, value):
         return (name, value)
@@ -25,7 +25,7 @@ class x_rss_decl_standalone(x_base):
 
 class x_rss(x_rss_element):
     __attrs__ = {
-        'version':unicode,
+        'version':str,
         'uses-dublin-core':bool
     }
 
@@ -56,9 +56,9 @@ class x_rss_date_element(x_base):
         }
 
     def _to_list(self, l):
-        l.extend((u'<', self.__tag__, '>'))
-        l.append(unicode(self.date.strftime('%a, %d %b %Y %H:%M:%S GMT')))
-        l.extend((u'</', self.__tag__, u'>'))
+        l.extend(('<', self.__tag__, '>'))
+        l.append(str(self.date.strftime('%a, %d %b %Y %H:%M:%S GMT')))
+        l.extend(('</', self.__tag__, '>'))
 
 class x_lastBuildDate(x_rss_date_element):
     pass
@@ -86,7 +86,7 @@ class x_guid(x_rss_element):
 
 class x_creator(x_rss_element):
     def _to_list(self, l):
-        l.append(u'<dc:creator>')
+        l.append('<dc:creator>')
         for child in self.__children__:
             x_base._render_child_to_list(child, l)
-        l.append(u'</dc:creator>')
+        l.append('</dc:creator>')

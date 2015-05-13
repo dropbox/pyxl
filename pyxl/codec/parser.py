@@ -2,12 +2,12 @@
 
 import tokenize
 from pyxl import html
-from html_tokenizer import (
+from .html_tokenizer import (
         HTMLTokenizer,
         ParseError as TokenizerParseError,
         State,
 )
-from pytokenize import Untokenizer
+from .pytokenize import Untokenizer
 
 class ParseError(Exception):
     def __init__(self, message, pos=None):
@@ -213,7 +213,7 @@ class PyxlParser(HTMLTokenizer):
         self.output.append('%s(' % x_tag)
 
         first_attr = True
-        for attr_name, attr_value in attrs.iteritems():
+        for attr_name, attr_value in attrs.items():
             if first_attr: first_attr = False
             else: self.output.append(', ')
 

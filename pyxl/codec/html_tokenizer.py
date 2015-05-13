@@ -40,7 +40,7 @@ class State(object):
 
     @classmethod
     def state_name(cls, state_val):
-        for k, v in cls.__dict__.iteritems():
+        for k, v in cls.__dict__.items():
             if v == state_val:
                 return k
         assert False, "impossible state value %r!" % state_val
@@ -394,16 +394,16 @@ class HTMLTokenizer(object):
 
 class HTMLTokenDumper(HTMLTokenizer):
     def handle_data(self, data):
-        print "DATA %r" % data
+        print("DATA %r" % data)
 
     def handle_starttag(self, tag_name, attrs):
-        print "STARTTAG %r %r" % (tag_name, attrs)
+        print("STARTTAG %r %r" % (tag_name, attrs))
 
     def handle_startendtag(self, tag_name, attrs):
-        print "STARTENDTAG %r %r" % (tag_name, attrs)
+        print("STARTENDTAG %r %r" % (tag_name, attrs))
 
     def handle_endtag(self, tag_name):
-        print "ENDTAG %r" % tag_name
+        print("ENDTAG %r" % tag_name)
 
 def main(filename):
     dumper = HTMLTokenDumper()

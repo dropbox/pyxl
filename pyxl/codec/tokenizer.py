@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
-import pytokenize as tokenize
+from . import pytokenize as tokenize
 import re
-from StringIO import StringIO
+from io import StringIO
 from pyxl.codec.parser import PyxlParser
-from pytokenize import Untokenizer
+from .pytokenize import Untokenizer
 
 class PyxlParseError(Exception): pass
 
@@ -39,10 +39,10 @@ class RewindableTokenStream(object):
         self.stop_readline = False
 
     def _dumpstate(self):
-        print "tokenizer state:"
-        print "  zero:", (self.zero_row, self.zero_col)
-        print "  rewound_buffer:", self.rewound_buffer
-        print "  unshift_buffer:", self.unshift_buffer
+        print("tokenizer state:")
+        print("  zero:", (self.zero_row, self.zero_col))
+        print("  rewound_buffer:", self.rewound_buffer)
+        print("  unshift_buffer:", self.unshift_buffer)
 
     def _readline(self):
         if self.stop_readline:
@@ -78,11 +78,11 @@ class RewindableTokenStream(object):
         self.unshift_buffer = []
         self._tokens = tokenize.generate_tokens(self._readline)
 
-    def next(self):
+    def __next__(self):
         if self.unshift_buffer:
             token = self.unshift_buffer.pop(0)
         else:
-            ttype, tvalue, tstart, tend, tline = self._tokens.next()
+            ttype, tvalue, tstart, tend, tline = next(self._tokens)
             tstart = self._adjust_position(tstart)
             tend = self._adjust_position(tend)
             token = (ttype, tvalue, tstart, tend, tline)
@@ -133,7 +133,7 @@ def transform_tokens(tokens):
 
     while 1:
         try:
-            token = tokens.next()
+            token = next(tokens)
         except (StopIteration, tokenize.TokenError):
             break
 
@@ -216,7 +216,7 @@ def get_pyxl_token(start_token, tokens):
                 tokens.rewind_and_retokenize((ttype, right, division, tend, tline))
                 python_tokens = list(transform_tokens(tokens))
 
-                close_curly = tokens.next()
+                close_curly = next(tokens)
                 ttype, tvalue, tstart, tend, tline = close_curly
                 close_curly_sub = (ttype, '', tend, tend, tline)
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-from __future__ import with_statement
 
-import codecs, cStringIO, encodings
+
+import codecs, io, encodings
 import sys
 import traceback
 from encodings import utf_8
@@ -10,15 +10,15 @@ from pyxl.codec.tokenizer import pyxl_tokenize, pyxl_untokenize
 def pyxl_transform(stream):
     try:
         output = pyxl_untokenize(pyxl_tokenize(stream.readline))
-    except Exception, ex:
-        print ex
+    except Exception as ex:
+        print(ex)
         traceback.print_exc()
         raise
 
     return output.rstrip()
 
 def pyxl_transform_string(text):
-    stream = cStringIO.StringIO(text)
+    stream = io.StringIO(text)
     return pyxl_transform(stream)
 
 def pyxl_decode(input, errors='strict'):
@@ -36,7 +36,7 @@ class PyxlIncrementalDecoder(utf_8.IncrementalDecoder):
 class PyxlStreamReader(utf_8.StreamReader):
     def __init__(self, *args, **kwargs):
         codecs.StreamReader.__init__(self, *args, **kwargs)
-        self.stream = cStringIO.StringIO(pyxl_transform(self.stream))
+        self.stream = io.StringIO(pyxl_transform(self.stream))
 
 def search_function(encoding):
     if encoding != 'pyxl': return None
@@ -72,7 +72,7 @@ if __name__ == '__main__':
         script = sys.argv[1]
         sys.argv = sys.argv[1:]
     else:
-        print >>sys.stderr, _USAGE
+        print(_USAGE, file=sys.stderr)
         sys.exit(1)
 
     if mode == 'module':
@@ -85,4 +85,4 @@ if __name__ == '__main__':
             # Use globals as our "locals" dictionary so that something
             # that tries to import __main__ (e.g. the unittest module)
             # will see the right things.
-            exec f.read() in globals(), globals()
+            exec(f.read(), globals(), globals())
