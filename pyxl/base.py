@@ -131,6 +131,9 @@ class x_base(object, metaclass=x_base_metaclass):
             self.__children__.insert(0, child)
 
     def __getattr__(self, name):
+        if len(name) > 4 and name.startswith('__') and name.endswith('__'):
+            # For dunder name (e.g. __iter__),raise AttributeError, not PyxlException.
+            raise AttributeError(name)
         return self.attr(name.replace('_', '-'))
 
     def attr(self, name, default=None):
