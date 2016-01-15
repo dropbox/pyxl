@@ -29,18 +29,17 @@ This meant no longer dealing with a separate "templating" language, and a lot mo
 
 ## Installation
 
-Clone the repo and run the following commands from the directory you cloned to.
+Clone the repo and run the following commands from the directory you cloned to.  (Sudo not needed if you use a virtualenv.)
 
 ```sh
-python setup.py build
-sudo python setup.py install
-sudo python finish_install.py
+sudo python3 -m pip install .
+sudo python3 finish_install.py
 ```
 
 To confirm that Pyxl was correctly installed, run the following command from the same directory:
 
 ```sh
-python pyxl/examples/hello_world.py
+python3 pyxl/examples/hello_world.py
 ```
 
 You should see the string `<html><body>Hello World!</body></html>` printed out. Thats it! You're ready to use Pyxl.
