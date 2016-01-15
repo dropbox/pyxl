@@ -1,3 +1,7 @@
+## NOTE: This is a Python 3 port
+
+For Python 2, see https://github.com/dropbox/pyxl
+
 Pyxl is an open source package that extends Python to support inline HTML. It converts HTML fragments into valid Python expressions, and is meant as a replacement for traditional python templating systems like [Mako](http://www.makotemplates.org/) or [Cheetah](http://www.cheetahtemplate.org/). It automatically escapes data, enforces correct markup and makes it easier to write reusable and well structured UI code. Pyxl was inspired by the [XHP](https://github.com/facebook/xhp/wiki) project at Facebook.
 
 ## Motivation
@@ -46,9 +50,11 @@ You should see the string `<html><body>Hello World!</body></html>` printed out. 
 After installing pyxl:
 
 ```sh
-easy_install unittest2
-python pyxl_tests.py
+python3 -m pip install unittest2
+python3 tests/test_basic.py
 ```
+
+(This only runs the most basic of tests.  It seems the script to run all tests got lost.)
 
 ## How it works
 
