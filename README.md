@@ -1,5 +1,7 @@
 Pyxl is an open source package that extends Python to support inline HTML. It converts HTML fragments into valid Python expressions, and is meant as a replacement for traditional python templating systems like [Mako](http://www.makotemplates.org/) or [Cheetah](http://www.cheetahtemplate.org/). It automatically escapes data, enforces correct markup and makes it easier to write reusable and well structured UI code. Pyxl was inspired by the [XHP](https://github.com/facebook/xhp/wiki) project at Facebook.
 
+This project only supports Python 2. However, a [Python 3 fork](https://github.com/gvanrossum/pyxl3) is available.
+
 ## Motivation
 
 At Cove, where Pyxl was developed, we found that using templates was getting in the way of quickly building new features. There were the usual issues of remembering to escape data to prevent XSS holes, avoiding invalid markup and deciphering cryptic stack traces. More importantly, our templates were getting hard to manage and understand which made iterating on our product more work than should be necessary.
