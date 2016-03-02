@@ -8,7 +8,7 @@ version = "1.0"
 distutils.core.setup(
     name="pyxl",
     version=version,
-    packages = ["pyxl", "pyxl.codec", "pyxl.scripts", "pyxl.examples"],
+    packages = ["pyxl", "pyxl.codec", "pyxl.scripts"],
     author="Akhil Wable",
     author_email="akhil.wable@gmail.com",
     url="http://github.com/awable/pyxl",
