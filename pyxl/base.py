@@ -24,6 +24,9 @@ class x_base_metaclass(type):
         for attr_name in self_attrs:
             assert '_' not in attr_name, (
                 "%s: '_' not allowed in attr names, use '-' instead" % attr_name)
+            if type(self_attrs[attr_name]) == tuple:
+                assert self_attrs[attr_name][0] == type(self_attrs[attr_name][1]), (
+                    "%s: default value is not of specified attribute type" % attr_name)
 
         combined_attrs = dict(parent_attrs)
         combined_attrs.update(self_attrs)

@@ -50,11 +50,11 @@ class PyxlTests(unittest2.TestCase):
     def test_default_attrs(self):
         class x_foo(x_element):
             __attrs__ = {
-              'value': (int, 5),
+                'value': (int, 5),
             }
 
             def render(self):
-              return <div>{self.value}</div>
+                return <div>{self.value}</div>
 
         self.assertEqual(<foo />.to_string(), '<div>5</div>')
         self.assertEqual(<foo />.value, 5)
@@ -65,6 +65,12 @@ class PyxlTests(unittest2.TestCase):
         foo.set_attr('value', 10)
         self.assertEqual(foo.value, 10)
         self.assertEqual(foo.to_string(), '<div>10</div>')
+
+        with self.assertRaises(AssertionError):
+            class x_bar(x_base):
+                __attrs__ = {
+                    'value': (str, 10),
+                }
 
     def test_enum_attrs(self):
         class x_foo(x_base):
