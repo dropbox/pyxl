@@ -2,6 +2,7 @@
 import unittest2
 from pyxl import html
 from pyxl.base import PyxlException, x_base
+from pyxl.element import x_element
 
 class PyxlTests(unittest2.TestCase):
 
@@ -45,6 +46,25 @@ class PyxlTests(unittest2.TestCase):
         self.assertEqual(
             <form_error name="foo" />.to_string(),
             '<form:error name="foo" />')
+
+    def test_default_attrs(self):
+        class x_foo(x_element):
+            __attrs__ = {
+              'value': (int, 5),
+            }
+
+            def render(self):
+              return <div>{self.value}</div>
+
+        self.assertEqual(<foo />.to_string(), '<div>5</div>')
+        self.assertEqual(<foo />.value, 5)
+
+        foo = <foo value=2 />
+        self.assertEqual(foo.value, 2)
+
+        foo.set_attr('value', 10)
+        self.assertEqual(foo.value, 10)
+        self.assertEqual(foo.to_string(), '<div>10</div>')
 
     def test_enum_attrs(self):
         class x_foo(x_base):

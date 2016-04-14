@@ -183,6 +183,7 @@ Some things to note about UI modules.
 * Modules names must begin with `x_` and be an instance of `x_element`
 * Modules must specify the attributes they accept via the `__attrs__` class variable. This is a dictionary where the key is the attribute name, and the value is the attribute type. Passing an attribute that is not listed in `__attrs__` will result in an error. The only exceptions are attributes accepted by all pyxl elements i.e. id, class, style, onclick, title and anything prefixed with "data-" or "aria-"
 * Providing a `class` attribute for a UI module element will automatically append the class string to the underlying HTML element the UI module renders. This is useful when you want to style UI modules differently based on where it is being rendered.
+* You can specify a tuple for an attribute definition in the form of `(type, default_value)` in order to set a default value for an attribute which will be used whenever the attribute's value is `None`.
 
 ### Fragments
 

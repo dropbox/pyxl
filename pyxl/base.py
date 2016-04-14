@@ -145,7 +145,10 @@ class x_base(object):
             return value
 
         attr_type = self.__attrs__.get(name, unicode)
-        if type(attr_type) == list:
+        if type(attr_type) == tuple:
+            return attr_type[1]
+
+        elif type(attr_type) == list:
             if not attr_type:
                 raise PyxlException('Invalid attribute definition')
 
@@ -168,6 +171,9 @@ class x_base(object):
 
         if value is not None:
             attr_type = self.__attrs__.get(name, unicode)
+
+            if type(attr_type) == tuple:
+                attr_type = attr_type[0]
 
             if type(attr_type) == list:
                 # support for enum values in pyxl attributes
