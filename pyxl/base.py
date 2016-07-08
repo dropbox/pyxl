@@ -5,6 +5,7 @@
 # insecure because these aren't being used for anything cryptographic and it's
 # much faster (2x). We're also not using NumPy (which is even faster) because
 # it's a difficult dependency to fulfill purely to generate random numbers.
+import collections
 import random
 import sys
 
@@ -220,7 +221,7 @@ class x_base(object):
         return (name in self.__attrs__ or name.startswith('data-') or name.startswith('aria-'))
 
     def to_string(self):
-        l = []
+        l = collections.deque()
         self._to_list(l)
         return u''.join(l)
 
