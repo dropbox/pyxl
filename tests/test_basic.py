@@ -1,90 +1,82 @@
 # coding: pyxl
-import unittest2
+import pytest
+
 from pyxl import html
 from pyxl.base import PyxlException, x_base
 
-class PyxlTests(unittest2.TestCase):
+def test_basics():
+    assert str(<div />) == '<div></div>'
+    assert str(<img src="blah" />) == '<img src="blah" />'
+    assert str(<div class="c"></div>) == '<div class="c"></div>'
+    assert str(<div><span></span></div>) == '<div><span></span></div>'
+    assert str(<frag><span /><span /></frag>) == '<span></span><span></span>'
 
-    def test_basics(self):
-        self.assertEqual(<div />.to_string(), '<div></div>')
-        self.assertEqual(<img src="blah" />.to_string(), '<img src="blah" />')
-        self.assertEqual(<div class="c"></div>.to_string(), '<div class="c"></div>')
-        self.assertEqual(<div><span></span></div>.to_string(), '<div><span></span></div>')
-        self.assertEqual(<frag><span /><span /></frag>.to_string(), '<span></span><span></span>')
+def test_escaping():
+    assert str(<div class="&">&{'&'}</div>) == '<div class="&amp;">&&amp;</div>'
+    assert str(<div>{html.rawhtml('&')}</div>) == '<div>&</div>'
 
-    def test_escaping(self):
-        self.assertEqual(<div class="&">&{'&'}</div>.to_string(), '<div class="&amp;">&&amp;</div>')
-        self.assertEqual(<div>{html.rawhtml('&')}</div>.to_string(), '<div>&</div>')
+def test_comments():
+    pyxl = (
+        <div
+            class="blah" # attr comment
+            >  # comment1
+            <!-- comment2 -->
+            text# comment3
+            # comment4
+        </div>)
+    assert str(pyxl) == '<div class="blah">text</div>'
 
-    def test_comments(self):
-        pyxl = (
-            <div
-                class="blah" # attr comment
-                >  # comment1
-                <!-- comment2 -->
-                text# comment3
-                # comment4
-            </div>)
-        self.assertEqual(pyxl.to_string(), '<div class="blah">text</div>')
+def test_cond_comment():
+    s = 'blahblah'
+    assert (str(<cond_comment cond="lt IE 8"><div class=">">{s}</div></cond_comment>)
+        == '<!--[if lt IE 8]><div class="&gt;">blahblah</div><![endif]-->')
+    assert (str(<cond_comment cond="(lt IE 8) & (gt IE 5)"><div>{s}</div></cond_comment>)
+        == '<!--[if (lt IE 8) & (gt IE 5)]><div>blahblah</div><![endif]-->')
 
-    def test_cond_comment(self):
-        s = 'blahblah'
-        self.assertEqual(
-            <cond_comment cond="lt IE 8"><div class=">">{s}</div></cond_comment>.to_string(),
-            '<!--[if lt IE 8]><div class="&gt;">blahblah</div><![endif]-->')
-        self.assertEqual(
-            <cond_comment cond="(lt IE 8) & (gt IE 5)"><div>{s}</div></cond_comment>.to_string(),
-            '<!--[if (lt IE 8) & (gt IE 5)]><div>blahblah</div><![endif]-->')
+def test_decl():
+    assert (str(<script><![CDATA[<div><div>]]></script>)
+        == '<script><![CDATA[<div><div>]]></script>')
 
-    def test_decl(self):
-        self.assertEqual(
-            <script><![CDATA[<div><div>]]></script>.to_string(),
-            '<script><![CDATA[<div><div>]]></script>')
+def test_form_error():
+    assert str(<form_error name="foo" />) == '<form:error name="foo" />'
 
-    def test_form_error(self):
-        self.assertEqual(
-            <form_error name="foo" />.to_string(),
-            '<form:error name="foo" />')
+def test_enum_attrs():
+    class x_foo(x_base):
+        __attrs__ = {
+            'value': ['a', 'b'],
+        }
 
-    def test_enum_attrs(self):
-        class x_foo(x_base):
-            __attrs__ = {
-                'value': ['a', 'b'],
-            }
+        def _to_list(self, l):
+            pass
 
-            def _to_list(self, l):
-                pass
+    assert (<foo />.attr('value')) == 'a'
+    assert (<foo />.value) == 'a'
+    assert (<foo value="b" />.attr('value')) == 'b'
+    assert (<foo value="b" />.value) == 'b'
 
-        self.assertEqual(<foo />.attr('value'), 'a')
-        self.assertEqual(<foo />.value, 'a')
-        self.assertEqual(<foo value="b" />.attr('value'), 'b')
-        self.assertEqual(<foo value="b" />.value, 'b')
-        with self.assertRaises(PyxlException):
-            <foo value="c" />
+    with pytest.raises(PyxlException):
+        <foo value="c" />
 
-        class x_bar(x_base):
-            __attrs__ = {
-                'value': ['a', None, 'b'],
-            }
+    class x_bar(x_base):
+        __attrs__ = {
+            'value': ['a', None, 'b'],
+        }
 
-            def _to_list(self, l):
-                pass
+        def _to_list(self, l):
+            pass
 
-        with self.assertRaises(PyxlException):
-            <bar />.attr('value')
+    with pytest.raises(PyxlException):
+        <bar />.attr('value')
 
-        with self.assertRaises(PyxlException):
-            <bar />.value
+    with pytest.raises(PyxlException):
+        <bar />.value
 
-        class x_baz(x_base):
-            __attrs__ = {
-                'value': [None, 'a', 'b'],
-            }
+    class x_baz(x_base):
+        __attrs__ = {
+            'value': [None, 'a', 'b'],
+        }
 
-            def _to_list(self, l):
-                pass
+        def _to_list(self, l):
+            pass
 
-        self.assertEqual(<baz />.value, None)
-
-if __name__ == '__main__':
-    unittest2.main()
+    assert (<baz />.value) == None
