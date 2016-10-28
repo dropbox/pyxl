@@ -48,8 +48,8 @@ You should see the string `<html><body>Hello World!</body></html>` printed out. 
 After installing pyxl:
 
 ```sh
-easy_install unittest2
-python pyxl_tests.py
+pip install pytest
+pytest tests
 ```
 
 ## How it works
