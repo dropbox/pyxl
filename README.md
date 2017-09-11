@@ -30,9 +30,7 @@ This meant no longer dealing with a separate "templating" language, and a lot mo
 Clone the repo and run the following commands from the directory you cloned to.
 
 ```sh
-python setup.py build
-sudo python setup.py install
-sudo python finish_install.py
+sudo pip install .
 ```
 
 To confirm that Pyxl was correctly installed, run the following command from the same directory:
@@ -198,7 +196,7 @@ Pyxl avoids support for logic within the HTML flow, except for one case where we
 
 Pyxl uses support for specifying source code encodings as described in [PEP 263](http://www.python.org/dev/peps/pep-0263/) to do what it does. The functionality was originally provided so that python developers could write code in non-ascii languages (eg. chinese variable names). Pyxl creates a custom encoding called pyxl which allows it to convert XML into regular python before the file is compiled. Once the pyxl codec is registered, any file starting with `# coding: pyxl` is run through the pyxl parser before compilation.
 
-To register the pyxl codec, one must import the [`pyxl.codec.register`](https://github.com/dropbox/pyxl/blob/master/pyxl/pyxl/codec/register.py) module. The **Installation Process** makes it so that this always happens at python startup via the final `sudo python finish_install.py` step. What this step is doing is adding a file called `pyxl.pth` in your python site-packages directory, which imports the `pyxl.codec.register` module. Anything with a `.pth` extension in the site-packages directory is run automatically at python startup. Read more about that [here](http://docs.python.org/library/site.html).
+To register the pyxl codec, one must import the [`pyxl.codec.register`](https://github.com/dropbox/pyxl/blob/master/pyxl/pyxl/codec/register.py) module. The **Installation Process** makes it so that this always happens at python startup.  This happens via a file called `pyxl.pth` which gets installed in your python site-packages directory, which imports the `pyxl.codec.register` module. Anything with a `.pth` extension in the site-packages directory is run automatically at python startup. Read more about that [here](http://docs.python.org/library/site.html).
 
 Some people may prefer avoiding adding pyxl.pth to their site-packages directory, in which case they should skip the final step of the installation process and explicitly import `pyxl.codec.register` in the entry point of their application.
 
