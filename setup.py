@@ -1,11 +1,46 @@
 #!/usr/bin/env python
 
-import distutils.core
-import sys
+import distutils
+import os.path
+
+from setuptools import setup
+from setuptools.command.install import install as _install
 
 version = "1.0"
 
-distutils.core.setup(
+PTH = 'import pyxl.codec.register'
+
+
+class install(_install):
+    def initialize_options(self):
+        _install.initialize_options(self)
+        name = self.distribution.metadata.name
+
+        contents = 'import sys; exec({!r})\n'.format(PTH)
+        self.extra_path = (name, contents)
+
+    def finalize_options(self):
+        _install.finalize_options(self)
+
+        install_suffix = os.path.relpath(
+            self.install_lib, self.install_libbase,
+        )
+        if install_suffix == '.':
+            distutils.log.info('skipping install of .pth during easy-install')
+        elif install_suffix == self.extra_path[1]:
+            self.install_lib = self.install_libbase
+            distutils.log.info(
+                "will install .pth to '%s.pth'",
+                os.path.join(self.install_lib, self.extra_path[0]),
+            )
+        else:
+            raise AssertionError(
+                'unexpected install_suffix',
+                self.install_lib, self.install_libbase, install_suffix,
+            )
+
+
+setup(
     name="pyxl",
     version=version,
     packages = ["pyxl", "pyxl.codec", "pyxl.scripts", "pyxl.examples"],
@@ -20,5 +55,6 @@ distutils.core.setup(
         python templating systems like Mako or Cheetah. It automatically escapes data, enforces
         correct markup and makes it easier to write reusable and well structured UI code.
         Pyxl was inspired by the XHP project at Facebook.
-    """
+    """,
+    cmdclass={'install': install},
 )
