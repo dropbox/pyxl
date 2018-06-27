@@ -1,4 +1,6 @@
-## NOTE: This is a Python 3 port
+## NOTE: This is a limited Python 3 port
+
+**This port does not accept feature requests.** For feature requests see https://github.com/pyxl4/pyxl4
 
 For Python 2, see https://github.com/dropbox/pyxl
 
