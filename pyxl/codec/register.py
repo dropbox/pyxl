@@ -53,7 +53,9 @@ def search_function(encoding):
         streamreader = PyxlStreamReader,
         streamwriter = utf8.streamwriter)
 
-codecs.register(search_function)
+
+# This import will do the actual registration with codecs
+import pyxl.codec.fast_register
 
 _USAGE = """\
 Wraps a python command to allow it to recognize pyxl-coded files with
