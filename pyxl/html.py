@@ -6,18 +6,6 @@ from pyxl.base import x_base
 # for backwards compatibility.
 from pyxl.browser_hacks import x_cond_comment
 
-_if_condition_stack = []
-_last_if_condition = None
-
-def _push_condition(cond):
-    _if_condition_stack.append(cond)
-    return cond
-
-def _leave_if():
-    global _last_if_condition
-    _last_if_condition = _if_condition_stack.pop()
-    return []
-
 class x_html_element(x_base):
     def _to_list(self, l):
         l.extend(('<', self.__tag__))
