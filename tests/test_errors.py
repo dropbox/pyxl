@@ -11,7 +11,7 @@ def _expect_failure(file_name):
     path = os.path.join(error_cases_path, file_name)
     try:
         with open(path) as f:
-            print pyxl_decode(f.read())
+            print(pyxl_decode(f.read()))
         assert False, "successfully decoded file %r" % file_name
     except (PyxlParseError, ParseError):
         pass
