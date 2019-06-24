@@ -273,7 +273,15 @@ class PyxlParser(HTMLTokenizer):
 
         if open_tag['tag'] == 'if':
             self.output.append(' if ')
+            # If another if/else appears in the condition, we need to parenthesize it.
+            # Detect this in a bad but easy way that might have some false positives.
+            start = len(self.output)
+            self.output.append('(')
             self._handle_attr_value(open_tag['attrs']['cond'])
+            if 'else' in ''.join(self.output[start:]):
+                self.output.append(')')
+            else:
+                self.output[start] = ''
             self.last_thing_was_close_if_tag = True
         else:
             self.last_thing_was_close_if_tag = False

@@ -107,6 +107,14 @@ class PyxlTests(unittest2.TestCase):
 
         self.assertEqual(
             <div>
+            <if cond="{True if True else False}">
+            whatever
+            </if>
+            </div>.to_string(),
+            '<div>whatever</div>')
+
+        self.assertEqual(
+            <div>
             <if cond="{True}">
                 {lol}
                 <if cond="{False}">
