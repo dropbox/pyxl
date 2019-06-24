@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import tokenize
+from pyxl.utils import escape
 from pyxl import html
 from .html_tokenizer import (
         HTMLTokenizer,
@@ -305,7 +306,10 @@ class PyxlParser(HTMLTokenizer):
         # XXX XXX mimics old pyxl, but this is gross and likely wrong. I'm pretty sure we actually
         # want %r instead of this crazy quote substitution and u"%s".
         data = data.replace('"', '\\"')
-        self.output.append('html.rawhtml(u"%s"), ' % data)
+        if data != escape(data):
+            self.output.append('html.rawhtml(u"%s"), ' % data)
+        else:
+            self.output.append('u"%s", ' % data)
 
         self.last_thing_was_python = False
         self.last_thing_was_close_if_tag = False
