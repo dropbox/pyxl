@@ -210,7 +210,7 @@ class PyxlParser(HTMLTokenizer):
             if 'cond' not in attrs:
                 raise ParseError("if tag must contain the 'cond' attr", self.end)
 
-            self.output.append('html.x_frag()(')
+            self.output.append('html.x_frag(')
             self.last_thing_was_python = False
             self.last_thing_was_close_if_tag = False
             return
@@ -221,7 +221,7 @@ class PyxlParser(HTMLTokenizer):
                 raise ParseError("<else> tag must come right after </if>", self.end)
 
             self.delete_last_comma()
-            self.output.append('else html.x_frag()(')
+            self.output.append('else html.x_frag(')
             self.last_thing_was_python = False
             self.last_thing_was_close_if_tag = False
             return
@@ -234,7 +234,10 @@ class PyxlParser(HTMLTokenizer):
 
         if hasattr(html, x_tag):
             self.output.append('html.')
-        self.output.append('%s(' % x_tag)
+        self.output.append(x_tag)
+
+        if attrs or not call:
+            self.output.append('(')
 
         first_attr = True
         for attr_name, attr_value in attrs.items():
@@ -245,7 +248,9 @@ class PyxlParser(HTMLTokenizer):
             self.output.append('=')
             self._handle_attr_value(attr_value)
 
-        self.output.append(')')
+        if attrs or not call:
+            self.output.append(')')
+
         if call:
             # start call to __call__
             self.output.append('(')
