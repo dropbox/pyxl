@@ -79,18 +79,12 @@ class x_base(object, metaclass=x_base_metaclass):
         'onunload': str,
         }
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, **kwargs):
         self.__attributes__ = {}
         self.__children__ = []
 
-        if args and kwargs:
-            raise PyxlException('Element constructor can take children or attributes, not both')
-
-        if args:
-            self.append_children(args)
-        else:
-            for name, value in kwargs.items():
-                self.set_attr(x_base._fix_attribute_name(name), value)
+        for name, value in kwargs.items():
+            self.set_attr(x_base._fix_attribute_name(name), value)
 
     def __call__(self, *children):
         self.append_children(children)

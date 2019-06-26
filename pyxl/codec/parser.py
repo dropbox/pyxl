@@ -224,7 +224,7 @@ class PyxlParser(HTMLTokenizer):
                 raise ParseError("if tag must contain the 'cond' attr", self.end)
 
             self.open_tags[-1]['open'] = len(self.output)  # track x_frag pos so it can be deleted
-            self.output.append('html.x_frag(')
+            self.output.append('html.x_frag()(')
             self.last_thing_was_python = False
             self.last_thing_was_close_if_tag = False
             return
@@ -236,8 +236,8 @@ class PyxlParser(HTMLTokenizer):
 
             self.delete_last_comma()
             self.output.append('else ')
-            self.open_tags[-1]['open'] = len(self.output)
-            self.output.append('html.x_frag(')  # track x_frag pos so it can be deleted
+            self.open_tags[-1]['open'] = len(self.output)  # track x_frag pos so it can be deleted
+            self.output.append('html.x_frag()(')
             self.last_thing_was_python = False
             self.last_thing_was_close_if_tag = False
             return
@@ -250,10 +250,7 @@ class PyxlParser(HTMLTokenizer):
 
         if hasattr(html, x_tag):
             self.output.append('html.')
-        self.output.append(x_tag)
-
-        if attrs or not call:
-            self.output.append('(')
+        self.output.append('%s(' % x_tag)
 
         first_attr = True
         for attr_name, attr_value in attrs.items():
@@ -264,9 +261,7 @@ class PyxlParser(HTMLTokenizer):
             self.output.append('=')
             self._handle_attr_value(attr_value)
 
-        if attrs or not call:
-            self.output.append(')')
-
+        self.output.append(')')
         if call:
             # start call to __call__
             self.output.append('(')
