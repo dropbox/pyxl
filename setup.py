@@ -3,7 +3,7 @@
 import distutils.core
 import sys
 
-version = "1.0"
+version = "1.1"
 
 distutils.core.setup(
     name="pyxl3",
