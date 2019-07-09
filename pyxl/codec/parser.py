@@ -58,6 +58,14 @@ class PyxlParser(HTMLTokenizer):
     def feed(self, token):
         ttype, tvalue, tstart, tend, tline = token
 
+        if ttype == tokenize.OP and tvalue == '\\':
+            return
+        # In certain circumstances the tokenizer will emit a bunch of spaces
+        # as individual error tokens. Ignore these so that spaces get collapsed
+        # properly.
+        if ttype == tokenize.ERRORTOKEN and tvalue == ' ':
+            return
+
         assert tstart[0] >= self.end[0], "row went backwards"
         if tstart[0] > self.end[0]:
             self.output.append("\n" * (tstart[0] - self.end[0]))

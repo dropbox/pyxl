@@ -246,9 +246,11 @@ class Untokenizer:
         row, col = start
         assert row >= self.prev_row, "row (%r) should be >= prev_row (%r)" % (row, self.prev_row)
         row_offset = row - self.prev_row
+        prev_col = self.prev_col
         if row_offset:
             self.tokens.append("\n" * row_offset)
-        col_offset = col - self.prev_col
+            prev_col = 0
+        col_offset = col - prev_col
         if col_offset:
             self.tokens.append(" " * col_offset)
 
@@ -443,6 +445,7 @@ def generate_tokens(readline):
                 elif initial in namechars:                 # ordinary name
                     yield (NAME, token, spos, epos, line)
                 elif initial == '\\':                      # continued stmt
+                    yield (OP, initial, spos, epos, line)
                     continued = 1
                 else:
                     if initial in '([{':

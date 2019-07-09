@@ -48,14 +48,10 @@ You should see the string `<html><body>Hello World!</body></html>` printed out. 
 
 ## Running the tests
 
-After installing pyxl:
-
 ```sh
-python3 -m pip install unittest2
-python3 tests/test_basic.py
+python3 -m pip install pytest
+python3 -m pytest
 ```
-
-(This only runs the most basic of tests.  It seems the script to run all tests got lost.)
 
 ## How it works
 

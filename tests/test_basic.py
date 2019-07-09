@@ -1,9 +1,9 @@
 # coding: pyxl
-import unittest2
+import unittest
 from pyxl import html
 from pyxl.base import PyxlException, x_base
 
-class PyxlTests(unittest2.TestCase):
+class PyxlTests(unittest.TestCase):
 
     def test_basics(self):
         self.assertEqual(<div />.to_string(), '<div></div>')
@@ -165,4 +165,4 @@ class PyxlTests(unittest2.TestCase):
         self.assertEqual(<baz />.value, None)
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()
