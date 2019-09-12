@@ -194,7 +194,7 @@ class PyxlParser(HTMLTokenizer):
             self.output.append('u"".join((')
             for part in attr_value:
                 if type(part) == list:
-                    self.output.append('unicode(')
+                    self.output.append('str(')
                     self.output.append(Untokenizer().untokenize(part))
                     self.output.append(')')
                 else:
