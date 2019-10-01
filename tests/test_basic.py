@@ -1,9 +1,9 @@
 # coding: pyxl
-import unittest2
+import unittest
 from pyxl import html
 from pyxl.base import PyxlException, x_base
 
-class PyxlTests(unittest2.TestCase):
+class PyxlTests(unittest.TestCase):
 
     def test_basics(self):
         self.assertEqual(<div />.to_string(), '<div></div>')
@@ -46,6 +46,84 @@ class PyxlTests(unittest2.TestCase):
             <form_error name="foo" />.to_string(),
             '<form:error name="foo" />')
 
+
+    def test_if(self):
+        self.assertEqual(
+            <div><if cond="{True}"><div /></if></div>.to_string(),
+            '<div><div></div></div>')
+        self.assertEqual(
+            <div><if cond="{False}"><div /></if></div>.to_string(),
+            '<div></div>')
+
+    def test_if_else(self):
+        lol = [<span></span>, <span></span>]
+
+        self.assertEqual(
+            <div>
+            <if cond="{True}">
+                <div />
+            </if>
+            # welp
+            lol
+            </div>.to_string(),
+            '<div><div></div>lol</div>')
+        self.assertEqual(
+            <div>
+            <if cond="{True}"></if>
+            # welp
+            <else>lol</else>
+            </div>.to_string(),
+            '<div></div>')
+        self.assertEqual(
+            <div>
+            <if cond="{True}"></if>
+            </div>.to_string(),
+            '<div></div>')
+        self.assertEqual(
+            <div>
+            <if cond="{False}"><div /></if>
+            <if cond="{True}"><div /></if>
+            {lol}
+            </div>.to_string(),
+            '<div><div></div><span></span><span></span></div>')
+        self.assertEqual(
+            <div>
+            <if cond="{True}"><div /></if>
+            <else>test</else>
+            </div>.to_string(),
+            '<div><div></div></div>')
+        self.assertEqual(
+            <div>
+            <if cond="{True}"><div /><div /></if>
+            <else><span></span></else>
+            </div>.to_string(),
+            '<div><div></div><div></div></div>')
+        self.assertEqual(
+            <div>
+            <if cond="{False}"><div /></if>
+            <else><span></span></else>
+            </div>.to_string(),
+            '<div><span></span></div>')
+
+        self.assertEqual(
+            <div>
+            <if cond="{True if True else False}">
+            whatever
+            </if>
+            </div>.to_string(),
+            '<div>whatever</div>')
+
+        self.assertEqual(
+            <div>
+            <if cond="{True}">
+                {lol}
+                <if cond="{False}">
+                whatever
+                </if>
+            </if>
+            </div>.to_string(),
+            '<div><span></span><span></span></div>')
+
     def test_enum_attrs(self):
         class x_foo(x_base):
             __attrs__ = {
@@ -87,4 +165,4 @@ class PyxlTests(unittest2.TestCase):
         self.assertEqual(<baz />.value, None)
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()

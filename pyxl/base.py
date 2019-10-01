@@ -31,61 +31,60 @@ class x_base_metaclass(type):
         setattr(self, '__attrs__', combined_attrs)
         setattr(self, '__tag__', name[2:])
 
-class x_base(object):
+class x_base(object, metaclass=x_base_metaclass):
 
-    __metaclass__ = x_base_metaclass
     __attrs__ = {
         # HTML attributes
-        'accesskey': unicode,
-        'class': unicode,
-        'dir': unicode,
-        'id': unicode,
-        'lang': unicode,
-        'maxlength': unicode,
-        'role': unicode,
-        'style': unicode,
+        'accesskey': str,
+        'class': str,
+        'dir': str,
+        'id': str,
+        'lang': str,
+        'maxlength': str,
+        'role': str,
+        'style': str,
         'tabindex': int,
-        'title': unicode,
-        'xml:lang': unicode,
+        'title': str,
+        'xml:lang': str,
 
         # Microdata HTML attributes
-        'itemtype': unicode,
-        'itemscope': unicode,
-        'itemprop': unicode,
-        'itemid': unicode,
-        'itemref': unicode,
+        'itemtype': str,
+        'itemscope': str,
+        'itemprop': str,
+        'itemid': str,
+        'itemref': str,
 
         # JS attributes
-        'onabort': unicode,
-        'onblur': unicode,
-        'onchange': unicode,
-        'onclick': unicode,
-        'ondblclick': unicode,
-        'onerror': unicode,
-        'onfocus': unicode,
-        'onkeydown': unicode,
-        'onkeypress': unicode,
-        'onkeyup': unicode,
-        'onload': unicode,
-        'onmousedown': unicode,
-        'onmouseenter': unicode,
-        'onmouseleave': unicode,
-        'onmousemove': unicode,
-        'onmouseout': unicode,
-        'onmouseover': unicode,
-        'onmouseup': unicode,
-        'onreset': unicode,
-        'onresize': unicode,
-        'onselect': unicode,
-        'onsubmit': unicode,
-        'onunload': unicode,
+        'onabort': str,
+        'onblur': str,
+        'onchange': str,
+        'onclick': str,
+        'ondblclick': str,
+        'onerror': str,
+        'onfocus': str,
+        'onkeydown': str,
+        'onkeypress': str,
+        'onkeyup': str,
+        'onload': str,
+        'onmousedown': str,
+        'onmouseenter': str,
+        'onmouseleave': str,
+        'onmousemove': str,
+        'onmouseout': str,
+        'onmouseover': str,
+        'onmouseup': str,
+        'onreset': str,
+        'onresize': str,
+        'onselect': str,
+        'onsubmit': str,
+        'onunload': str,
         }
 
     def __init__(self, **kwargs):
         self.__attributes__ = {}
         self.__children__ = []
 
-        for name, value in kwargs.iteritems():
+        for name, value in kwargs.items():
             self.set_attr(x_base._fix_attribute_name(name), value)
 
     def __call__(self, *children):
@@ -95,7 +94,7 @@ class x_base(object):
     def get_id(self):
         eid = self.attr('id')
         if not eid:
-            eid = 'pyxl%d' % random.randint(0, sys.maxint)
+            eid = 'pyxl%d' % random.randint(0, sys.maxsize)
             self.set_attr('id', eid)
         return eid
 
@@ -105,7 +104,7 @@ class x_base(object):
 
         # filter by class
         if selector[0] == '.':
-            select = lambda x: selector[1:] in x.get_class() 
+            select = lambda x: selector[1:] in x.get_class()
 
         # filter by id
         elif selector[0] == '#':
@@ -120,7 +119,7 @@ class x_base(object):
         else:
             func = select
 
-        return filter(func, self.__children__)
+        return list(filter(func, self.__children__))
 
     def append(self, child):
         if type(child) in (list, tuple) or hasattr(child, '__iter__'):
@@ -133,6 +132,9 @@ class x_base(object):
             self.__children__.insert(0, child)
 
     def __getattr__(self, name):
+        if len(name) > 4 and name.startswith('__') and name.endswith('__'):
+            # For dunder name (e.g. __iter__),raise AttributeError, not PyxlException.
+            raise AttributeError(name)
         return self.attr(name.replace('_', '-'))
 
     def attr(self, name, default=None):
@@ -145,7 +147,7 @@ class x_base(object):
         if value is not None:
             return value
 
-        attr_type = self.__attrs__.get(name, unicode)
+        attr_type = self.__attrs__.get(name, str)
         if type(attr_type) == list:
             if not attr_type:
                 raise PyxlException('Invalid attribute definition')
@@ -158,7 +160,7 @@ class x_base(object):
         return default
 
     def transfer_attributes(self, element):
-        for name, value in self.__attributes__.iteritems():
+        for name, value in self.__attributes__.items():
             if element.allows_attribute(name) and element.attr(name) is None:
                 element.set_attr(name, value)
 
@@ -168,7 +170,7 @@ class x_base(object):
             raise PyxlException('<%s> has no attr named "%s"' % (self.__tag__, name))
 
         if value is not None:
-            attr_type = self.__attrs__.get(name, unicode)
+            attr_type = self.__attrs__.get(name, str)
 
             if type(attr_type) == list:
                 # support for enum values in pyxl attributes
@@ -189,7 +191,7 @@ class x_base(object):
                     msg = '%s: %s: incorrect type for "%s". expected %s, got %s' % (
                         self.__tag__, self.__class__.__name__, name, attr_type, type(value))
                     exception = PyxlException(msg)
-                    raise exception, None, exc_tb
+                    raise exception.with_traceback(exc_tb)
 
             self.__attributes__[name] = value
 
@@ -214,7 +216,7 @@ class x_base(object):
         return self.__attributes__
 
     def set_attributes(self, attrs_dict):
-        for name, value in attrs_dict.iteritems():
+        for name, value in attrs_dict.items():
             self.set_attr(name, value)
 
     def allows_attribute(self, name):
@@ -223,7 +225,7 @@ class x_base(object):
     def to_string(self):
         l = collections.deque()
         self._to_list(l)
-        return u''.join(l)
+        return ''.join(l)
 
     def _to_list(self, l):
         raise NotImplementedError()

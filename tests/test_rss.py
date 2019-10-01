@@ -1,7 +1,7 @@
-#coding: pyxl
+# coding: pyxl
 import datetime
 
-from  unittest2 import TestCase
+from unittest import TestCase
 from pyxl import html
 from pyxl import rss
 
@@ -109,7 +109,7 @@ class RssTests(TestCase):
 
     def test_guid(self):
         self.assertEqual(<rss.guid>foo</rss.guid>.to_string(), u'<guid>foo</guid>')
-        self.assertEqual(<rss.guid is-perma-link="{False}">foo</rss.guid>.to_string(), 
+        self.assertEqual(<rss.guid is-perma-link="{False}">foo</rss.guid>.to_string(),
                          u'<guid isPermaLink="false">foo</guid>')
         self.assertEqual(<rss.guid is-perma-link="{True}">foo</rss.guid>.to_string(),
                          u'<guid isPermaLink="true">foo</guid>')

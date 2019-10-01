@@ -1,0 +1,42 @@
+build/
+__pycache__
+*.py[cod]
+*~
+@*
+/build
+/env*/
+*.iml
+/out/
+.venv*/
+.mypy_cache/
+.cache
+.dmypy.json
+
+# Packages
+*.egg
+*.egg-info
+*.eggs
+
+# IDEs
+.idea
+*.swp
+.vscode
+
+# Operating Systems
+.DS_Store
+
+# Coverage Files
+htmlcov
+.coverage*
+
+# pytest cache
+.pytest_cache/
+
+# virtualenv
+.Python
+bin/
+lib/
+include/
+
+.tox
+pip-wheel-metadata

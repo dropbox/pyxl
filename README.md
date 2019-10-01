@@ -1,3 +1,9 @@
+## NOTE: This is a limited Python 3 port
+
+**This port does not accept feature requests.** For feature requests see https://github.com/pyxl4/pyxl4
+
+For Python 2, see https://github.com/dropbox/pyxl
+
 Pyxl is an open source package that extends Python to support inline HTML. It converts HTML fragments into valid Python expressions, and is meant as a replacement for traditional python templating systems like [Mako](http://www.makotemplates.org/) or [Cheetah](http://www.cheetahtemplate.org/). It automatically escapes data, enforces correct markup and makes it easier to write reusable and well structured UI code. Pyxl was inspired by the [XHP](https://github.com/facebook/xhp/wiki) project at Facebook.
 
 This project only supports Python 2. However, a [Python 3 fork](https://github.com/gvanrossum/pyxl3) is available.
@@ -10,7 +16,7 @@ Existing templating systems do support things like logic and reusable modules - 
 
 ```py
 import html
-print (
+print(
     html.head().appendChild(
         html.body().appendChild(
                 html.text("Hello World!"))))
@@ -20,36 +26,33 @@ To get around these limitations, we developed Pyxl which allowed us to treat HTM
 
 ```py
 # coding: pyxl
-print <html><body>Hello World!</body></html>
+print(<html><body>Hello World!</body></html>)
 ```
 
 This meant no longer dealing with a separate "templating" language, and a lot more control over how we wrote our front-end code. Also, since Pyxl maps HTML to structured python objects and expressions instead of arbitrary blobs of strings, adding support for things like automatically escaping data was trivial. Switching to Pyxl led to much cleaner and modularized UI code, and allowed us to write new features and pages a lot quicker.
 
 ## Installation
 
-Clone the repo and run the following commands from the directory you cloned to.
+Clone the repo and run the following commands from the directory you cloned to.  (Sudo not needed if you use a virtualenv.)
 
 ```sh
-python setup.py build
-sudo python setup.py install
-sudo python finish_install.py
+sudo python3 -m pip install .
+sudo python3 finish_install.py
 ```
 
 To confirm that Pyxl was correctly installed, run the following command from the same directory:
 
 ```sh
-python pyxl/examples/hello_world.py
+python3 pyxl/examples/hello_world.py
 ```
 
 You should see the string `<html><body>Hello World!</body></html>` printed out. Thats it! You're ready to use Pyxl.
 
 ## Running the tests
 
-After installing pyxl:
-
 ```sh
-easy_install unittest2
-python pyxl_tests.py
+python3 -m pip install pytest
+python3 -m pytest
 ```
 
 ## How it works
@@ -57,7 +60,7 @@ python pyxl_tests.py
 Pyxl converts HTML tags into python objects before the file is run through the interpreter, so the code that actually runs is regular python. For example, the `Hello World` example above is converted into:
 
 ```py
-print x_head().append_children(x_body().append_children("Hello World!"))
+print(x_head().append_children(x_body().append_children("Hello World!")))
 ```
 
 Pyxl's usefulness comes from being able to write HTML rather than unwieldy object instantiations and function calls. Note that Pyxl automatically adds objects for all HTML tags to Python builtins, so there is no need to import `x_head` or `x_body` in the example above.
@@ -76,7 +79,7 @@ With that, you can start using HTML in your python file.
 
 ### Inline Python Expressions
 
-Anything wrapped with {}'s is evaluated as a python expression. Please note that attribute values must be wrapped inside quotes, regardless of whether it contains a python expression or not. When used in attribute values, the python expression must evaluate to something that can be cast to unicode. When used inside a tag, the expression can evaluate to anything that can be cast to unicode, an HTML tag, or a list containing those two types. This is demonstrated in the example below:
+Anything wrapped with {}'s is evaluated as a python expression. Please note that attribute values must be wrapped inside quotes, regardless of whether it contains a python expression or not. When used in attribute values, the python expression must evaluate to something that can be cast to str. When used inside a tag, the expression can evaluate to anything that can be cast to str, an HTML tag, or a list containing those two types. This is demonstrated in the example below:
 
 ```py
 image_name = "bolton.png"
@@ -125,10 +128,10 @@ Pyxl automatically escapes all data and attribute values, therefore all your mar
 safe_value = "<b>Puppies!</b>"
 unsafe_value = "<script>bad();</script>"
 unsafe_attr = '">'
-print (<div class="{unsafe_attr}">
-           {unsafe_value}
-           {rawhtml(safe_value)}
-       </div>)
+print(<div class="{unsafe_attr}">
+          {unsafe_value}
+          {rawhtml(safe_value)}
+      </div>)
 ```
 
 The above script will print out:
@@ -146,7 +149,7 @@ UI Modules are especially useful for creating re-usable building blocks in your 
 
 Creating UI modules in Pyxl simply means creating a class that inherits from [`x_element`](https://github.com/dropboxe/pyxl/blob/master/pyxl/pyxl/element.py) and implements the `render()` method. Modules must be prefixed with `x_`. This is an arbitrary requirement, but is useful in separating out pyxl modules from other things.
 
-Arguments to a UI module are passed as attributes to the UI module tag. Attribute values for these tags need not evaluate to samething that can be cast to unicode, ONLY if the attribute value is a single python expression i.e. the only thing inside the quotes is a {} wrapped python expression. This allows one to pass in any type to a UI module. To demonstrate, a useful UI module is a user badge, which displays a user profile picture with the user's name and some arbitrary content to the right of it:
+Arguments to a UI module are passed as attributes to the UI module tag. Attribute values for these tags need not evaluate to samething that can be cast to str, ONLY if the attribute value is a single python expression i.e. the only thing inside the quotes is a {} wrapped python expression. This allows one to pass in any type to a UI module. To demonstrate, a useful UI module is a user badge, which displays a user profile picture with the user's name and some arbitrary content to the right of it:
 
 ```py
 # coding: pyxl
@@ -175,7 +178,7 @@ from some_module import x_user_badge
 
 user = User.get(some_user_id)
 content = <div>Any arbitrary content...</div>
-print <user_badge user="{user}">{content}</user_badge>
+print(<user_badge user="{user}">{content}</user_badge>)
 ```
 
 Some things to note about UI modules.

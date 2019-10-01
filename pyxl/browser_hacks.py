@@ -17,7 +17,7 @@ from pyxl.utils import escape
 
 class x_cond_comment(x_base):
     __attrs__ = {
-        'cond': unicode,
+        'cond': str,
         }
 
     def _to_list(self, l):
@@ -25,18 +25,18 @@ class x_cond_comment(x_base):
         cond = self.__attributes__.get('cond', '')
         cond = '&'.join(map(escape, cond.split('&')))
 
-        l.extend((u'<!--[if ', cond, u']>'))
+        l.extend(('<!--[if ', cond, ']>'))
 
         for child in self.__children__:
             x_base._render_child_to_list(child, l)
 
-        l.append(u'<![endif]-->')
+        l.append('<![endif]-->')
 
 class x_cond_noncomment(x_base):
     ''' This is a conditional comment where browsers which don't support conditional comments
         will parse the children by default. '''
     __attrs__ = {
-        'cond': unicode,
+        'cond': str,
         }
 
     def _to_list(self, l):
@@ -44,10 +44,10 @@ class x_cond_noncomment(x_base):
         cond = self.__attributes__.get('cond', '')
         cond = '&'.join(map(escape, cond.split('&')))
 
-        l.extend((u'<!--[if ', cond, u']><!-->'))
+        l.extend(('<!--[if ', cond, ']><!-->'))
 
         for child in self.__children__:
             x_base._render_child_to_list(child, l)
 
-        l.append(u'<!--<![endif]-->')
+        l.append('<!--<![endif]-->')
 

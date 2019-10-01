@@ -91,7 +91,6 @@ from token import *
 import token
 __all__ = [x for x in dir(token) if not x.startswith("_")]
 __all__ += ["COMMENT", "tokenize", "generate_tokens", "NL", "untokenize"]
-del x
 del token
 
 COMMENT = N_TOKENS
@@ -157,8 +156,8 @@ ContStr = group(r"[uUbB]?[rR]?'[^\n'\\]*(?:\\.[^\n'\\]*)*" +
 PseudoExtras = group(r'\\\r?\n|\Z', Comment, Triple)
 PseudoToken = Whitespace + group(PseudoExtras, Number, Funny, ContStr, Name)
 
-tokenprog, pseudoprog, single3prog, double3prog = map(
-    re.compile, (Token, PseudoToken, Single3, Double3))
+tokenprog, pseudoprog, single3prog, double3prog = list(map(
+    re.compile, (Token, PseudoToken, Single3, Double3)))
 endprogs = {"'": re.compile(Single), '"': re.compile(Double),
             "'''": single3prog, '"""': double3prog,
             "r'''": single3prog, 'r"""': double3prog,
@@ -208,8 +207,8 @@ class StopTokenizing(Exception): pass
 def printtoken(type, token, srow_scol, erow_ecol, line): # for testing
     srow, scol = srow_scol
     erow, ecol = erow_ecol
-    print "%d,%d-%d,%d:\t%s\t%s" % \
-        (srow, scol, erow, ecol, tok_name[type], repr(token))
+    print("%d,%d-%d,%d:\t%s\t%s" % \
+        (srow, scol, erow, ecol, tok_name[type], repr(token)))
 
 def tokenize(readline, tokeneater=printtoken):
     """
@@ -247,9 +246,11 @@ class Untokenizer:
         row, col = start
         assert row >= self.prev_row, "row (%r) should be >= prev_row (%r)" % (row, self.prev_row)
         row_offset = row - self.prev_row
+        prev_col = self.prev_col
         if row_offset:
             self.tokens.append("\n" * row_offset)
-        col_offset = col - self.prev_col
+            prev_col = 0
+        col_offset = col - prev_col
         if col_offset:
             self.tokens.append(" " * col_offset)
 
@@ -444,6 +445,7 @@ def generate_tokens(readline):
                 elif initial in namechars:                 # ordinary name
                     yield (NAME, token, spos, epos, line)
                 elif initial == '\\':                      # continued stmt
+                    yield (OP, initial, spos, epos, line)
                     continued = 1
                 else:
                     if initial in '([{':

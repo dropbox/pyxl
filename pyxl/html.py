@@ -6,43 +6,31 @@ from pyxl.base import x_base
 # for backwards compatibility.
 from pyxl.browser_hacks import x_cond_comment
 
-_if_condition_stack = []
-_last_if_condition = None
-
-def _push_condition(cond):
-    _if_condition_stack.append(cond)
-    return cond
-
-def _leave_if():
-    global _last_if_condition
-    _last_if_condition = _if_condition_stack.pop()
-    return []
-
 class x_html_element(x_base):
     def _to_list(self, l):
-        l.extend((u'<', self.__tag__))
-        for name, value in self.__attributes__.iteritems():
-            l.extend((u' ', name, u'="', escape(value), u'"'))
-        l.append(u'>')
+        l.extend(('<', self.__tag__))
+        for name, value in self.__attributes__.items():
+            l.extend((' ', name, '="', escape(value), '"'))
+        l.append('>')
 
         for child in self.__children__:
             x_base._render_child_to_list(child, l)
 
-        l.extend((u'</', self.__tag__, u'>'))
+        l.extend(('</', self.__tag__, '>'))
 
 class x_html_element_nochild(x_base):
     def append(self, child):
         raise Exception('<%s> does not allow children.', self.__tag__)
 
     def _to_list(self, l):
-        l.extend((u'<', self.__tag__))
-        for name, value in self.__attributes__.iteritems():
-            l.extend((u' ', name, u'="', escape(value), u'"'))
-        l.append(u' />')
+        l.extend(('<', self.__tag__))
+        for name, value in self.__attributes__.items():
+            l.extend((' ', name, '="', escape(value), '"'))
+        l.append(' />')
 
 class x_html_comment(x_base):
     __attrs__ = {
-        'comment': unicode,
+        'comment': str,
         }
 
     def _to_list(self, l):
@@ -50,36 +38,36 @@ class x_html_comment(x_base):
 
 class x_html_decl(x_base):
     __attrs__ = {
-        'decl': unicode,
+        'decl': str,
         }
 
     def _to_list(self, l):
-        l.extend((u'<!', self.attr('decl'), u'>'))
+        l.extend(('<!', self.attr('decl'), '>'))
 
 class x_html_marked_decl(x_base):
     __attrs__ = {
-        'decl': unicode,
+        'decl': str,
         }
 
     def _to_list(self, l):
-        l.extend((u'<![', self.attr('decl'), u']]>'))
+        l.extend(('<![', self.attr('decl'), ']]>'))
 
 class x_html_ms_decl(x_base):
     __attrs__ = {
-        'decl': unicode,
+        'decl': str,
         }
 
     def _to_list(self, l):
-        l.extend((u'<![', self.attr('decl'), u']>'))
+        l.extend(('<![', self.attr('decl'), ']>'))
 
 class x_rawhtml(x_html_element_nochild):
     __attrs__= {
-        'text': unicode,
+        'text': str,
         }
 
     def _to_list(self, l):
-        if not isinstance(self.text, unicode):
-            l.append(unicode(self.text, 'utf8'))
+        if not isinstance(self.text, str):
+            l.append(str(self.text, 'utf8'))
         else:
             l.append(self.text)
 
@@ -93,12 +81,12 @@ class x_frag(x_base):
 
 class x_a(x_html_element):
     __attrs__ = {
-        'href': unicode,
-        'rel': unicode,
-        'type': unicode,
-        'name': unicode,
-        'target': unicode,
-        'download': unicode,
+        'href': str,
+        'rel': str,
+        'type': str,
+        'name': str,
+        'target': str,
+        'download': str,
         }
 
 class x_abbr(x_html_element):
@@ -112,11 +100,11 @@ class x_address(x_html_element):
 
 class x_area(x_html_element_nochild):
     __attrs__ = {
-        'alt': unicode,
-        'coords': unicode,
-        'href': unicode,
-        'nohref': unicode,
-        'target': unicode,
+        'alt': str,
+        'coords': str,
+        'href': str,
+        'nohref': str,
+        'target': str,
         }
 
 class x_article(x_html_element):
@@ -127,7 +115,7 @@ class x_aside(x_html_element):
 
 class x_audio(x_html_element):
     __attrs__ = {
-        'src': unicode
+        'src': str
         }
 
 class x_b(x_html_element):
@@ -138,12 +126,12 @@ class x_big(x_html_element):
 
 class x_blockquote(x_html_element):
     __attrs__ = {
-        'cite': unicode,
+        'cite': str,
         }
 
 class x_body(x_html_element):
     __attrs__ = {
-        'contenteditable': unicode,
+        'contenteditable': str,
         }
 
 class x_br(x_html_element_nochild):
@@ -151,16 +139,16 @@ class x_br(x_html_element_nochild):
 
 class x_button(x_html_element):
     __attrs__ = {
-        'disabled': unicode,
-        'name': unicode,
-        'type': unicode,
-        'value': unicode,
+        'disabled': str,
+        'name': str,
+        'type': str,
+        'value': str,
         }
 
 class x_canvas(x_html_element):
     __attrs__ = {
-        'height': unicode,
-        'width': unicode,
+        'height': str,
+        'width': str,
         }
 
 class x_caption(x_html_element):
@@ -174,22 +162,22 @@ class x_code(x_html_element):
 
 class x_col(x_html_element_nochild):
     __attrs__ = {
-        'align': unicode,
-        'char': unicode,
+        'align': str,
+        'char': str,
         'charoff': int,
         'span': int,
-        'valign': unicode,
-        'width': unicode,
+        'valign': str,
+        'width': str,
         }
 
 class x_colgroup(x_html_element):
     __attrs__ = {
-        'align': unicode,
-        'char': unicode,
+        'align': str,
+        'char': str,
         'charoff': int,
         'span': int,
-        'valign': unicode,
-        'width': unicode,
+        'valign': str,
+        'width': str,
         }
 
 class x_datalist(x_html_element):
@@ -200,13 +188,13 @@ class x_dd(x_html_element):
 
 class x_del(x_html_element):
     __attrs__ = {
-        'cite': unicode,
-        'datetime': unicode,
+        'cite': str,
+        'datetime': str,
         }
 
 class x_div(x_html_element):
    __attrs__ = {
-        'contenteditable': unicode,
+        'contenteditable': str,
        }
 
 class x_dfn(x_html_element):
@@ -223,13 +211,13 @@ class x_em(x_html_element):
 
 class x_embed(x_html_element):
     __attrs__ = {
-        'src': unicode,
-        'width': unicode,
-        'height': unicode,
-        'allowscriptaccess': unicode,
-        'allowfullscreen': unicode,
-        'name': unicode,
-        'type': unicode,
+        'src': str,
+        'width': str,
+        'height': str,
+        'allowscriptaccess': str,
+        'allowfullscreen': str,
+        'name': str,
+        'type': str,
         }
 
 class x_figure(x_html_element):
@@ -246,41 +234,41 @@ class x_footer(x_html_element):
 
 class x_form(x_html_element):
     __attrs__ = {
-        'action': unicode,
-        'accept': unicode,
-        'accept-charset': unicode,
-        'autocomplete': unicode,
-        'enctype': unicode,
-        'method': unicode,
-        'name': unicode,
-        'novalidate': unicode,
-        'target': unicode,
+        'action': str,
+        'accept': str,
+        'accept-charset': str,
+        'autocomplete': str,
+        'enctype': str,
+        'method': str,
+        'name': str,
+        'novalidate': str,
+        'target': str,
         }
 
 class x_form_error(x_base):
     __attrs__ = {
-        'name': unicode
+        'name': str
         }
 
     def _to_list(self, l):
-        l.extend((u'<form:error name="', self.attr('name'), u'" />'))
+        l.extend(('<form:error name="', self.attr('name'), '" />'))
 
 class x_frame(x_html_element_nochild):
     __attrs__ = {
-        'frameborder': unicode,
-        'longdesc': unicode,
-        'marginheight': unicode,
-        'marginwidth': unicode,
-        'name': unicode,
-        'noresize': unicode,
-        'scrolling': unicode,
-        'src': unicode,
+        'frameborder': str,
+        'longdesc': str,
+        'marginheight': str,
+        'marginwidth': str,
+        'name': str,
+        'noresize': str,
+        'scrolling': str,
+        'src': str,
         }
 
 class x_frameset(x_html_element):
     __attrs__ = {
-        'rows': unicode,
-        'cols': unicode,
+        'rows': str,
+        'cols': str,
         }
 
 class x_h1(x_html_element):
@@ -303,7 +291,7 @@ class x_h6(x_html_element):
 
 class x_head(x_html_element):
     __attrs__ = {
-        'profile': unicode,
+        'profile': str,
         }
 
 class x_header(x_html_element):
@@ -314,12 +302,12 @@ class x_hr(x_html_element_nochild):
 
 class x_html(x_html_element):
     __attrs__ = {
-        'content': unicode,
-        'scheme': unicode,
-        'http-equiv': unicode,
-        'xmlns': unicode,
-        'xmlns:og': unicode,
-        'xmlns:fb': unicode,
+        'content': str,
+        'scheme': str,
+        'http-equiv': str,
+        'xmlns': str,
+        'xmlns:og': str,
+        'xmlns:fb': str,
         }
 
 class x_i(x_html_element):
@@ -327,78 +315,78 @@ class x_i(x_html_element):
 
 class x_iframe(x_html_element):
     __attrs__ = {
-        'frameborder': unicode,
-        'height': unicode,
-        'longdesc': unicode,
-        'marginheight': unicode,
-        'marginwidth': unicode,
-        'name': unicode,
-        'sandbox': unicode,
-        'scrolling': unicode,
-        'src': unicode,
-        'width': unicode,
+        'frameborder': str,
+        'height': str,
+        'longdesc': str,
+        'marginheight': str,
+        'marginwidth': str,
+        'name': str,
+        'sandbox': str,
+        'scrolling': str,
+        'src': str,
+        'width': str,
         # rk: 'allowTransparency' is not in W3C's HTML spec, but it's supported in most modern browsers.
-        'allowtransparency': unicode,
-        'allowfullscreen': unicode,
+        'allowtransparency': str,
+        'allowfullscreen': str,
         }
 
 class x_video(x_html_element):
     __attrs__ = {
-        'autoplay': unicode,
-        'controls': unicode,
-        'height': unicode,
-        'loop': unicode,
-        'muted': unicode,
-        'poster': unicode,
-        'preload': unicode,
-        'src': unicode,
-        'width': unicode,
+        'autoplay': str,
+        'controls': str,
+        'height': str,
+        'loop': str,
+        'muted': str,
+        'poster': str,
+        'preload': str,
+        'src': str,
+        'width': str,
         }
 
 class x_img(x_html_element_nochild):
     __attrs__ = {
-        'alt': unicode,
-        'src': unicode,
-        'height': unicode,
-        'ismap': unicode,
-        'longdesc': unicode,
-        'usemap': unicode,
-        'vspace': unicode,
-        'width': unicode,
+        'alt': str,
+        'src': str,
+        'height': str,
+        'ismap': str,
+        'longdesc': str,
+        'usemap': str,
+        'vspace': str,
+        'width': str,
         }
 
 class x_input(x_html_element_nochild):
     __attrs__ = {
-        'accept': unicode,
-        'align': unicode,
-        'alt': unicode,
-        'autofocus': unicode,
-        'checked': unicode,
-        'disabled': unicode,
-        'list': unicode,
-        'max': unicode,
-        'maxlength': unicode,
-        'min': unicode,
-        'name': unicode,
-        'pattern': unicode,
-        'placeholder': unicode,
-        'readonly': unicode,
-        'size': unicode,
-        'src': unicode,
-        'step': unicode,
-        'type': unicode,
-        'value': unicode,
-        'autocomplete': unicode,
-        'autocorrect': unicode,
-        'required': unicode,
-        'spellcheck': unicode,
-        'multiple': unicode,
+        'accept': str,
+        'align': str,
+        'alt': str,
+        'autofocus': str,
+        'checked': str,
+        'disabled': str,
+        'list': str,
+        'max': str,
+        'maxlength': str,
+        'min': str,
+        'name': str,
+        'pattern': str,
+        'placeholder': str,
+        'readonly': str,
+        'size': str,
+        'src': str,
+        'step': str,
+        'type': str,
+        'value': str,
+        'autocomplete': str,
+        'autocorrect': str,
+        'required': str,
+        'spellcheck': str,
+        'multiple': str,
         }
 
 class x_ins(x_html_element):
     __attrs__ = {
-        'cite': unicode,
-        'datetime': unicode,
+        'cite': str,
+        'datetime': str,
         }
 
 class x_kbd(x_html_element):
@@ -406,7 +394,7 @@ class x_kbd(x_html_element):
 
 class x_label(x_html_element):
     __attrs__ = {
-        'for': unicode,
+        'for': str,
         }
 
 class x_legend(x_html_element):
@@ -417,37 +405,37 @@ class x_li(x_html_element):
 
 class x_link(x_html_element_nochild):
     __attrs__ = {
-        'charset': unicode,
-        'href': unicode,
-        'hreflang': unicode,
-        'media': unicode,
-        'rel': unicode,
-        'rev': unicode,
-        'sizes': unicode,
-        'target': unicode,
-        'type': unicode,
+        'charset': str,
+        'href': str,
+        'hreflang': str,
+        'media': str,
+        'rel': str,
+        'rev': str,
+        'sizes': str,
+        'target': str,
+        'type': str,
         }
 
 class x_main(x_html_element):
     # we are not enforcing the w3 spec of one and only one main element on the
     # page
     __attrs__ = {
-        'role': unicode,
+        'role': str,
     }
 
 class x_map(x_html_element):
     __attrs__ = {
-        'name': unicode,
+        'name': str,
         }
 
 class x_meta(x_html_element_nochild):
     __attrs__ = {
-        'content': unicode,
-        'http-equiv': unicode,
-        'name': unicode,
-        'property': unicode,
-        'scheme': unicode,
-        'charset': unicode,
+        'content': str,
+        'http-equiv': str,
+        'name': str,
+        'property': str,
+        'scheme': str,
+        'charset': str,
         }
 
 class x_nav(x_html_element):
@@ -461,22 +449,22 @@ class x_noscript(x_html_element):
 
 class x_object(x_html_element):
     __attrs__ = {
-        'align': unicode,
-        'archive': unicode,
-        'border': unicode,
-        'classid': unicode,
-        'codebase': unicode,
-        'codetype': unicode,
-        'data': unicode,
-        'declare': unicode,
-        'height': unicode,
-        'hspace': unicode,
-        'name': unicode,
-        'standby': unicode,
-        'type': unicode,
-        'usemap': unicode,
-        'vspace': unicode,
-        'width': unicode,
+        'align': str,
+        'archive': str,
+        'border': str,
+        'classid': str,
+        'codebase': str,
+        'codetype': str,
+        'data': str,
+        'declare': str,
+        'height': str,
+        'hspace': str,
+        'name': str,
+        'standby': str,
+        'type': str,
+        'usemap': str,
+        'vspace': str,
+        'width': str,
         }
 
 class x_ol(x_html_element):
@@ -484,16 +472,16 @@ class x_ol(x_html_element):
 
 class x_optgroup(x_html_element):
     __attrs__ = {
-        'disabled': unicode,
-        'label': unicode,
+        'disabled': str,
+        'label': str,
         }
 
 class x_option(x_html_element):
     __attrs__ = {
-        'disabled': unicode,
-        'label': unicode,
-        'selected': unicode,
-        'value': unicode,
+        'disabled': str,
+        'label': str,
+        'selected': str,
+        'value': str,
         }
 
 class x_p(x_html_element):
@@ -501,10 +489,10 @@ class x_p(x_html_element):
 
 class x_param(x_html_element):
     __attrs__ = {
-        'name': unicode,
-        'type': unicode,
-        'value': unicode,
-        'valuetype': unicode,
+        'name': str,
+        'type': str,
+        'value': str,
+        'valuetype': str,
         }
 
 class x_pre(x_html_element):
@@ -518,7 +506,7 @@ class x_progress(x_html_element):
 
 class x_q(x_html_element):
     __attrs__ = {
-        'cite': unicode,
+        'cite': str,
         }
 
 class x_samp(x_html_element):
@@ -526,11 +514,11 @@ class x_samp(x_html_element):
 
 class x_script(x_html_element):
     __attrs__ = {
-        'async': unicode,
-        'charset': unicode,
-        'defer': unicode,
-        'src': unicode,
-        'type': unicode,
+        'async': str,
+        'charset': str,
+        'defer': str,
+        'src': str,
+        'type': str,
         }
 
 class x_section(x_html_element):
@@ -538,11 +526,11 @@ class x_section(x_html_element):
 
 class x_select(x_html_element):
     __attrs__ = {
-        'disabled': unicode,
-        'multiple': unicode,
-        'name': unicode,
-        'size': unicode,
-        'required': unicode,
+        'disabled': str,
+        'multiple': str,
+        'name': str,
+        'size': str,
+        'required': str,
         }
 
 class x_small(x_html_element):
@@ -556,8 +544,8 @@ class x_strong(x_html_element):
 
 class x_style(x_html_element):
     __attrs__ = {
-        'media': unicode,
-        'type': unicode,
+        'media': str,
+        'type': str,
         }
 
 class x_sub(x_html_element):
@@ -568,85 +556,85 @@ class x_sup(x_html_element):
 
 class x_table(x_html_element):
     __attrs__ = {
-        'border': unicode,
-        'cellpadding': unicode,
-        'cellspacing': unicode,
-        'frame': unicode,
-        'rules': unicode,
-        'summary': unicode,
-        'width': unicode,
+        'border': str,
+        'cellpadding': str,
+        'cellspacing': str,
+        'frame': str,
+        'rules': str,
+        'summary': str,
+        'width': str,
         }
 
 class x_tbody(x_html_element):
     __attrs__ = {
-        'align': unicode,
-        'char': unicode,
-        'charoff': unicode,
-        'valign': unicode,
+        'align': str,
+        'char': str,
+        'charoff': str,
+        'valign': str,
         }
 
 class x_td(x_html_element):
     __attrs__ = {
-        'abbr': unicode,
-        'align': unicode,
-        'axis': unicode,
-        'char': unicode,
-        'charoff': unicode,
-        'colspan': unicode,
-        'headers': unicode,
-        'rowspan': unicode,
-        'scope': unicode,
-        'valign': unicode,
+        'abbr': str,
+        'align': str,
+        'axis': str,
+        'char': str,
+        'charoff': str,
+        'colspan': str,
+        'headers': str,
+        'rowspan': str,
+        'scope': str,
+        'valign': str,
         }
 
 class x_textarea(x_html_element):
     __attrs__ = {
-        'cols': unicode,
-        'rows': unicode,
-        'disabled': unicode,
-        'placeholder': unicode,
-        'name': unicode,
-        'readonly': unicode,
-        'autocorrect': unicode,
-        'autocomplete': unicode,
-        'autocapitalize': unicode,
-        'spellcheck': unicode,
-        'autofocus': unicode,
-        'required': unicode,
+        'cols': str,
+        'rows': str,
+        'disabled': str,
+        'placeholder': str,
+        'name': str,
+        'readonly': str,
+        'autocorrect': str,
+        'autocomplete': str,
+        'autocapitalize': str,
+        'spellcheck': str,
+        'autofocus': str,
+        'required': str,
         }
 
 class x_tfoot(x_html_element):
     __attrs__ = {
-        'align': unicode,
-        'char': unicode,
-        'charoff': unicode,
-        'valign': unicode,
+        'align': str,
+        'char': str,
+        'charoff': str,
+        'valign': str,
         }
 
 class x_th(x_html_element):
     __attrs__ = {
-        'abbr': unicode,
-        'align': unicode,
-        'axis': unicode,
-        'char': unicode,
-        'charoff': unicode,
-        'colspan': unicode,
-        'rowspan': unicode,
-        'scope': unicode,
-        'valign': unicode,
+        'abbr': str,
+        'align': str,
+        'axis': str,
+        'char': str,
+        'charoff': str,
+        'colspan': str,
+        'rowspan': str,
+        'scope': str,
+        'valign': str,
         }
 
 class x_thead(x_html_element):
     __attrs__ = {
-        'align': unicode,
-        'char': unicode,
-        'charoff': unicode,
-        'valign': unicode,
+        'align': str,
+        'char': str,
+        'charoff': str,
+        'valign': str,
         }
 
 class x_time(x_html_element):
     __attrs__ = {
-        'datetime': unicode,
+        'datetime': str,
         }
 
 class x_title(x_html_element):
@@ -654,10 +642,10 @@ class x_title(x_html_element):
 
 class x_tr(x_html_element):
     __attrs__ = {
-        'align': unicode,
-        'char': unicode,
-        'charoff': unicode,
-        'valign': unicode,
+        'align': str,
+        'char': str,
+        'charoff': str,
+        'valign': str,
         }
 
 class x_tt(x_html_element):
