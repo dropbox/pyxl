@@ -283,7 +283,7 @@ def untokenize(iterable):
     Round-trip invariant for full input:
         Untokenized source will match input source exactly
 
-    Round-trip invariant for limited intput:
+    Round-trip invariant for limited input:
         # Output text will tokenize the back to the input
         t1 = [tok[:2] for tok in generate_tokens(f.readline)]
         newcode = untokenize(t1)
@@ -296,7 +296,7 @@ def untokenize(iterable):
 
 def generate_tokens(readline):
     """
-    The generate_tokens() generator requires one argment, readline, which
+    The generate_tokens() generator requires one argument, readline, which
     must be a callable object which provides the same interface as the
     readline() method of built-in file objects. Each call to the function
     should return one line of input as a string.  Alternately, readline
