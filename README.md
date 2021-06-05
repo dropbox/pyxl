@@ -108,7 +108,7 @@ new_form = <form action="/submit" method="POST">{old_form.children("input")}</fo
 
 ### Attributes
 
-You can access any attribute of a tag as a member variable on the tag, or via the `attr(attr_name)` function. Setting attribute must happen via the `set_attr(attr_name, attr_value)` function i.e. do not set attrs by directly setting member variables. To access attributes that contain '-' (hypen) as a member variable, replace the hypen with '_' (underscore). For this reason, pyxl does not allow attributes with an underscore in their name. Here is an example that demonstrates all these principles:
+You can access any attribute of a tag as a member variable on the tag, or via the `attr(attr_name)` function. Setting attribute must happen via the `set_attr(attr_name, attr_value)` function i.e. do not set attrs by directly setting member variables. To access attributes that contain '-' (hyphen) as a member variable, replace the hyphen with '_' (underscore). For this reason, pyxl does not allow attributes with an underscore in their name. Here is an example that demonstrates all these principles:
 
 ```py
 fruit = <div data-text="tangerine" />
