@@ -144,7 +144,7 @@ The above script will print out:
 
 UI Modules are especially useful for creating re-usable building blocks in your application, making it quicker to implement new features, and keeping the UI consistent. Pyxl thinks of UI modules as user defined HTML tags, and so they are used just like you would use a `<div>` or any other tag.
 
-Creating UI modules in Pyxl simply means creating a class that inherits from [`x_element`](https://github.com/dropboxe/pyxl/blob/master/pyxl/pyxl/element.py) and implements the `render()` method. Modules must be prefixed with `x_`. This is an arbitrary requirement, but is useful in separating out pyxl modules from other things.
+Creating UI modules in Pyxl simply means creating a class that inherits from [`x_element`](https://github.com/dropbox/pyxl/blob/master/pyxl/pyxl/element.py) and implements the `render()` method. Modules must be prefixed with `x_`. This is an arbitrary requirement, but is useful in separating out pyxl modules from other things.
 
 Arguments to a UI module are passed as attributes to the UI module tag. Attribute values for these tags need not evaluate to samething that can be cast to unicode, ONLY if the attribute value is a single python expression i.e. the only thing inside the quotes is a {} wrapped python expression. This allows one to pass in any type to a UI module. To demonstrate, a useful UI module is a user badge, which displays a user profile picture with the user's name and some arbitrary content to the right of it:
 
